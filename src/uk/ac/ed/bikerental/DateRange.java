@@ -29,10 +29,23 @@ public class DateRange {
         return ChronoUnit.DAYS.between(this.getStart(), this.getEnd());
     }
 
+	/**
+	 * Checks whether some other DateRange is overlaping this one
+	 */
     public Boolean overlaps(DateRange other) {
-        // TODO: implement date range intersection checking
-        assert false;
-        return null;
+		if (end.isBefore(start) || 
+				other.getEnd().isBefore(other.getStart())){
+			throw new IllegalArgumentException();
+		}
+		if (start.isBefore(other.getEnd()) &&
+				other.getStart().isBefore(end)){
+			// overlaps
+			return Boolean.TRUE;
+		}else{
+			// does not overlap
+			return Boolean.FALSE;
+			
+		}
     }
 
     @Override
