@@ -29,9 +29,14 @@ public class DateRange {
         return ChronoUnit.DAYS.between(this.getStart(), this.getEnd());
     }
 
-	/**
-	 * Checks whether some other DateRange is overlaping this one
-	 */
+
+    /**
+     * Checks whether the current object overlaps with another {@link DateRange} passed
+     * as a parameter.
+     *
+     * @param other an object {@link DateRange}
+     * @return      <code>true</code> if overlap found, <code>false</code> otherwise.
+     */
     public Boolean overlaps(DateRange other) {
 		if (end.isBefore(start) || 
 				other.getEnd().isBefore(other.getStart())){
@@ -49,12 +54,14 @@ public class DateRange {
     }
 
     @Override
+    // TODO: Add JavaDoc
     public int hashCode() {
         // hashCode method allowing use in collections
         return Objects.hash(end, start);
     }
 
     @Override
+    // TODO: Add JavaDoc
     public boolean equals(Object obj) {
         // equals method for testing equality in tests
         if (this == obj)

@@ -18,6 +18,7 @@ public class Location {
 
     /**
      * Initialises an instance of class Location.
+     *
      * @param postcode  The postcode of the object. Expects a string of
      *                  length >= 6.
      * @param address   The address of the object.
@@ -30,8 +31,9 @@ public class Location {
 
 
     /**
-     * Tests whether the location is near a second {@link Location} passed as a parameter.
-     * @param other a second {@link Location}
+     * Tests whether the location is near another {@link Location} passed as a parameter.
+     *
+     * @param other an object {@link Location}
      * @return <code>true</code> if the location shares the same first two characters,
      *         <code>false</code> otherwise.
      */
