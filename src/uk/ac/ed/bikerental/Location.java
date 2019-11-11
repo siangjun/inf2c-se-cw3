@@ -1,5 +1,7 @@
 package uk.ac.ed.bikerental;
 
+import java.util.Objects;
+
 /**
  * Location is the class which represents a spatial location described by:
  * <ul>
@@ -34,6 +36,7 @@ public class Location {
      *         <code>false</code> otherwise.
      */
     public boolean isNearTo(Location other) {
+        if (Objects.isNull(other)) throw new NullPointerException();
         String otherPostcode = other.getPostcode();
         if (this.postcode.charAt(0) == otherPostcode.charAt(0)) {
             if (this.postcode.charAt(1) == otherPostcode.charAt(1)) {
@@ -57,6 +60,6 @@ public class Location {
     public String getAddress() {
         return address;
     }
-    
+
     // You can add your own methods here
 }

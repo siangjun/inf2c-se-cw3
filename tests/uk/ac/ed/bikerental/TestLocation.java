@@ -19,15 +19,21 @@ class TestLocation {
     
     // TODO: put some tests here
     @Test
-    void testNear() {
+    void testIsNearToNear() {
         assertEquals(true, location1.isNearTo(location2));
     }
 
     @Test
-    void testFar() {
+    void testIsNearToFar() {
         assertEquals(false, location1.isNearTo(location3));
     }
 
+    @Test
+    void testIsNearToNull() {
+        assertThrows(NullPointerException.class, () -> {
+            location1.isNearTo(null);
+        });
+    }
     @Test
     void testGetPostcode() {
         assertEquals("EH8 9LE", location1.getPostcode());
