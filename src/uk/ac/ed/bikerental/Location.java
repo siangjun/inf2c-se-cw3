@@ -22,6 +22,7 @@ public class Location {
      * @param postcode  The postcode of the object. Expects a string of
      *                  length >= 6.
      * @param address   The address of the object.
+     * @throws AssertionError if the length of the postcode is less than 6
      */
     public Location(String postcode, String address) {
         assert postcode.length() >= 6;
@@ -36,6 +37,7 @@ public class Location {
      * @param other an object {@link Location}
      * @return <code>true</code> if the location shares the same first two characters,
      *         <code>false</code> otherwise.
+     * @throws NullPointerException if other is null
      */
     public boolean isNearTo(Location other) {
         if (Objects.isNull(other)) throw new NullPointerException();
