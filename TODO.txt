@@ -6,3 +6,9 @@ The bike can have multiple booking at the same time for different DateRanges, th
 Also the Booking does not extend the functionality of Quote, it just has it as data
 	(there are problems with initializing the quote inside the Booking,
 		have to make a copy, of already a class of which all data is already final)
+		
+Testing:
+	A lot of classes are data structures with all final methods, which means that they are very easy to test for system testing
+	What will be needed to be done is some kind of bike factory, so Server can be initialized with it
+		Server then compared to the design will not hold a list of bikes, but will hold a bike factory of bikes that will have some method
+		that returns all the bikes in the list

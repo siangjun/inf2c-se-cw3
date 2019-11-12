@@ -1,8 +1,8 @@
 package uk.ac.ed.bikerental;
 
 public class Booking {
-	private Customer customer;
-	private Quote quote;
+	private final Customer customer;
+	private final Quote quote;
 
 	
 	public Booking(Customer customer, Quote quote) {
