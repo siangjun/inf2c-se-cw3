@@ -1,1 +1,8 @@
 Make tests for DateRange::overlaps function, that also check the throws
+
+The bike can have multiple booking at the same time for different DateRanges, the code will reflect that, but the 
+	design pattern needs to reflect that
+
+Also the Booking does not extend the functionality of Quote, it just has it as data
+	(there are problems with initializing the quote inside the Booking,
+		have to make a copy, of already a class of which all data is already final)
