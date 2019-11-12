@@ -14,10 +14,17 @@ class TestLocation {
         location2 = new Location("EH8 9LE", "10 Crichton Street");
 
         // A location that isn't next to the other 2 locations
-        location3 = new Location("SW1A 2AA", "10 Downing Street");
+        location3 = new Location("NW1 6XE", "221B Baker Street");
     }
     
     // TODO: put some tests here
+    @Test
+    void testAssertPostcode() {
+        assertThrows(AssertionError.class, () -> {
+            Location failLoc = new Location("abc", "1 Potterrow");
+        });
+    }
+
     @Test
     void testIsNearToNear() {
         assertEquals(true, location1.isNearTo(location2));
