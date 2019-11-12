@@ -104,6 +104,11 @@ public class DateRange {
         DateRange other = (DateRange) obj;
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
-    
+
     // You can add your own methods here
+
+	public DateRange createExtendedRange(int days) {
+		return new DateRange(start.minusDays(days), end.plusDays(days));
+	}
+    
 }

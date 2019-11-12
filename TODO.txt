@@ -6,6 +6,15 @@ The bike can have multiple booking at the same time for different DateRanges, th
 Also the Booking does not extend the functionality of Quote, it just has it as data
 	(there are problems with initializing the quote inside the Booking,
 		have to make a copy, of already a class of which all data is already final)
+
+I don't know if you need function parameters in the design, but I'll be noting what I have added and deviated
+
+getQuotes
+	isTaken now takes a parameter of query
+	matchesQuery now takes query and bike parameters
+	
+	btw forgot that when there are no found available quotes to extend the query by 3 days each way
+	
 		
 Testing:
 	A lot of classes are data structures with all final methods, which means that they are very easy to test for system testing

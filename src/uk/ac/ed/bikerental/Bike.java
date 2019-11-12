@@ -6,4 +6,9 @@ public class Bike {
         assert false;
         return null;
     }
+    public boolean isTaken(Query query) {
+    	// TODO implement this and add data
+    	assert false;
+    	return true;
+    }
 }
