@@ -14,7 +14,7 @@ public class DateRange {
      * @param end    the end of the date range
      */
     public DateRange(LocalDate start, LocalDate end) {
-        // suggestion: check the date range validity at init
+        // TODO: check the date range validity at init
         // see unit test
         this.start = start;
         this.end = end;

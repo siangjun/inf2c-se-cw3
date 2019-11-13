@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 /**
  * Class of each bike in the system.
+ * @author Michal Glinski
  * @author Siang Jun Teo
  */
 public class Bike {
@@ -20,7 +21,6 @@ public class Bike {
         this.taken = false;
         this.dateAcquired = LocalDate.now();
     }
-
 
     /**
      * Creates an instance of {@link Bike} class.
