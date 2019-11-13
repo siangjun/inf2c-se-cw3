@@ -13,7 +13,7 @@ public class Bike {
     private Semaphore mutex;
     private BikeType type;
     private LocalDate dateAcquired;
-    private HashSet<Booking> bookings;
+    private HashSet<Booking> bookings;  //Keep track of multiple bookings at different dates?
 
     /**
      * Creates an instance of {@link Bike} class. Sets the date acquired to now.

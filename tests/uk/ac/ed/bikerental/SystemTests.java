@@ -15,20 +15,23 @@ import java.util.TreeSet;
 
 public class SystemTests {
     // You can add attributes here
-
+    Server testServer;
+    Query testQuery;
     @BeforeEach
     void setUp() throws Exception {
         // Setup mock delivery service before each tests
         DeliveryServiceFactory.setupMockDeliveryService();
-        
-        // Put your test setup here
+        testServer = new Server(new MockServerData());
+        // Don't care how query fetching to the server works so we make a test one
+        testQuery = new Query(new Location("EH8 9LE", ""), new DateRange(
+                new LocalDate.of(2019,11,1), new LocalDate.of(2019,11,4)));
+        // there should be a way to test a specific bike we want returned that somehow comes from the mock data
     }
     
     // TODO: Write system tests covering the three main use cases
 
     @Test
-    void myFirstTest() {
-        // JUnit tests look like this
-        assertEquals("The moon", "cheese"); // Should fail
+    void testMatchQuery() {
+
     }
 }

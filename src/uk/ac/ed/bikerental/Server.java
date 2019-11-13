@@ -15,7 +15,7 @@ public class Server {
 	 * @param bike bike to check against query
 	 * @return <code>true</code> or <code>false</code> depending whether bike matches the query
 	 */
-	private boolean matchesQuery(Query query, Bike bike) {
+	private boolean matchesQuery(Query query, Bike bike) {  // could be BikeType??
 		// TODO implement this
 		assert false;
 		return false;
