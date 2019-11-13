@@ -13,6 +13,7 @@ class TestDateRange {
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test
+        // is using "this" necessary? -- SJ
         this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7),
                 LocalDate.of(2019, 1, 10));
         this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5),
@@ -34,20 +35,33 @@ class TestDateRange {
 
     @Test
     void testOverlapsTrue() {
-        // TODO: check we can see when two date ranges overlap
-        fail();
+        assertTrue(dateRange1.overlaps(dateRange2));
+        assertTrue(dateRange2.overlaps(dateRange1));
     }
 
     @Test
     void testOverlapsFalse() {
-        // TODO: check we can see when two date ranges  don't overlap
-        fail();
+        assertFalse(dateRange1.overlaps(dateRange3));
+        assertFalse(dateRange3.overlaps(dateRange1));
     }
 
 	@Test
 	void testInvalidData() {
-		// TODO: check when the start is after the end 
-
+        //checks for day difference
+        assertThrows(IllegalArgumentException.class, () -> {
+            DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
+                    LocalDate.of(2019,12,4));
+        });
+        //checks for month difference
+        assertThrows(IllegalArgumentException.class, () -> {
+            DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
+                    LocalDate.of(2019,11,5));
+        });
+        //checks for year difference
+        assertThrows(IllegalArgumentException.class, () -> {
+            DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
+                    LocalDate.of(2018,11,5));
+        });
 
 	}
 }

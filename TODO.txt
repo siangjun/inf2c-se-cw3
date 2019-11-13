@@ -17,6 +17,8 @@ getQuotes
 	
 		
 Testing:
+	Shouldn't we write the unit test firsts before doing the actual code so we know what we're suppose to be aiming for?	
+
 	A lot of classes are data structures with all final methods, which means that they are very easy to test for system testing
 	What will be needed to be done is some kind of bike factory, so Server can be initialized with it
 		Server then compared to the design will not hold a list of bikes, but will hold a bike factory of bikes that will have some method

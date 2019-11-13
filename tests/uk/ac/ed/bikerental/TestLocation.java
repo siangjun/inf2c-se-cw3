@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 class TestLocation {
-    Location location1;
-    Location location2;
-    Location location3;
+    private Location location1;
+    private Location location2;
+    private Location location3;
     @BeforeEach
     void setUp() throws Exception {
         // Locations that are next to each other
@@ -27,12 +27,14 @@ class TestLocation {
 
     @Test
     void testIsNearToNear() {
-        assertEquals(true, location1.isNearTo(location2));
+        assertTrue(location1.isNearTo(location2));
+        assertTrue(location2.isNearTo(location1));
     }
 
     @Test
     void testIsNearToFar() {
-        assertEquals(false, location1.isNearTo(location3));
+        assertFalse(location1.isNearTo(location3));
+        assertFalse(location3.isNearTo(location1));
     }
 
     @Test

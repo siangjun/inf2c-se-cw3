@@ -22,24 +22,24 @@ public class Server {
 	}
 
 	public ArrayList<Quote> getQuotes(Customer customer, Query query) {
-		ArrayList<Quote> avaliableQuotes = new ArrayList<Quote>();
+		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
 		ArrayList<Bike> bikes = serverData.getBikes();
-		ArrayList<Bike> avaliableBikes = new ArrayList<Bike>();
+		ArrayList<Bike> availableBikes = new ArrayList<Bike>();
 		bikes.forEach((bike) -> {
 			if (!bike.isTaken(query)) 
 				if (matchesQuery(query, bike))
-					avaliableBikes.add(bike);
+					availableBikes.add(bike);
 		});
 		
-		avaliableBikes.forEach((bike) -> {
-			avaliableQuotes.add(new Quote(bike, query));
+		availableBikes.forEach((bike) -> {
+			availableQuotes.add(new Quote(bike, query));
 		});
 		
-		// TODO: what if avaliableBikes/Quotes is empty then have to rerun the process with bigger querry
+		// TODO: what if availableBikes/Quotes is empty then have to rerun the process with bigger query
 		//		 Maybe add a new function that will check all the bikes give query in this(Server) class
 		
-		return avaliableQuotes;
+		return availableQuotes;
 	}
 
 }

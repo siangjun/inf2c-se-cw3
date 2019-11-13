@@ -14,6 +14,8 @@ public class DateRange {
      * @param end    the end of the date range
      */
     public DateRange(LocalDate start, LocalDate end) {
+        // suggestion: check the date range validity at init
+        // see unit test
         this.start = start;
         this.end = end;
     }
@@ -57,8 +59,8 @@ public class DateRange {
      *
      * @param other an object {@link DateRange}
      * @return      <code>true</code> if overlap found, <code>false</code> otherwise.
-     * @throws {@link IllegalArgumentException} If any of the ends are before the start
-     * @throws {@link IllegalArgumentException} If other is null
+     * @throws IllegalArgumentException If any of the ends are before the start
+     * @throws IllegalArgumentException If other is null
      */
     public Boolean overlaps(DateRange other) {
     	if (other == null) throw new IllegalArgumentException();

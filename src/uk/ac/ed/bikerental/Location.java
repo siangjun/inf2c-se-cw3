@@ -25,7 +25,7 @@ public class Location {
      * @throws AssertionError if the length of the postcode is less than 6
      */
     public Location(String postcode, String address) {
-        assert postcode.length() >= 6;
+        assert postcode.length() >= 6;              // how does assert work and why doesn't it throw anything?
         this.postcode = postcode;
         this.address = address;
     }
@@ -66,4 +66,9 @@ public class Location {
     }
 
     // You can add your own methods here
+
+    //test! TODO:Delete later
+    public static void main(String[] args) {
+        Location test = new Location("abc", "1 High Street");
+    }
 }
