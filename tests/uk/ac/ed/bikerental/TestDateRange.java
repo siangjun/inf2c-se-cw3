@@ -62,6 +62,12 @@ class TestDateRange {
             DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
                     LocalDate.of(2018,11,5));
         });
-
+	}
+	
+	@Test
+	void testCreateExtendedRange() {
+		assertTrue(dateRange1.createExtendedRange(3).equals(
+				new DateRange(LocalDate.of(2019, 1, 4), 
+							  LocalDate.of(2019, 1, 13))));
 	}
 }
