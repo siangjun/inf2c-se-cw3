@@ -8,6 +8,5 @@ import java.util.ArrayList;
  */
 public interface ServerDataInterface {
 	public ArrayList<Bike> getBikes();
-	public ArrayList<Booking> getBookings();
 	// TODO: Add more things
 }

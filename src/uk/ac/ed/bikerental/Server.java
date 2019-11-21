@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class Server {
 	private ServerDataInterface serverData;
+	private PaymentService paymentService;
 	
-	public Server(ServerDataInterface sdata) {
+	public Server(ServerDataInterface sdata, PaymentService paymentService) {
 		this.serverData = sdata;
+		this.paymentService = paymentService;
 	}
 	
 	/**
@@ -40,6 +42,31 @@ public class Server {
 		//		 Maybe add a new function that will check all the bikes give query in this(Server) class
 		
 		return availableQuotes;
+	}
+	
+	// TODO change the return from boolean to int representing the unique booking number
+	// TODO maybe make it global or something, but we need to make it a mock class
+	// TODO make booking mapping shit
+	public boolean bookQuote(Customer customer, Quote quote, PaymentService.PaymentData paymentData, boolean wantsDelivery) {
+		// TODO create unique booking numbers
+		Booking booking = quote.getBike().lock(customer, quote);
+		if (booking == null) { // Bike is no longer available
+			return false;
+		}
+		if (paymentService.confirmPayment(paymentData)) {
+			customer.addBooking(booking);
+			if (wantsDelivery) {
+				// TODO implement the delivery service here
+			}
+			return true;
+		} else { // Payment refused, remove lock from the bike
+			quote.getBike().unlock(booking);
+			return false;
+		}
+	}
+	
+	public void returnBike(Provider provider, int bookingNumber) {
+
 	}
 
 }

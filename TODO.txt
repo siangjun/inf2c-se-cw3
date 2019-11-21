@@ -9,11 +9,19 @@ Also the Booking does not extend the functionality of Quote, it just has it as d
 
 I don't know if you need function parameters in the design, but I'll be noting what I have added and deviated
 
+Make booking deliverable, as it will be easier to determine what booking the delivery it talking about and every booking has exactly one bike
+
+The server now has no data about bookings (all the relevant data is in the bikes)
+
 getQuotes
 	isTaken now takes a parameter of query
 	matchesQuery now takes query and bike parameters
 	
 	btw forgot that when there are no found available quotes to extend the query by 3 days each way
+	
+
+bookQuote
+	This now also calls customer.addBooking on success
 	
 		
 Testing:

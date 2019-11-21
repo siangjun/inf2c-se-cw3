@@ -21,14 +21,15 @@ public class SystemTests {
     void setUp() throws Exception {
         // Setup mock delivery service before each tests
         DeliveryServiceFactory.setupMockDeliveryService();
-        testServer = new Server(new MockServerData());
+        testServer = new Server(new MockServerData(), new MockPaymentService());
         // Don't care how query fetching to the server works so we make a test one
         testQuery = new Query(new Location("EH8 9LE", ""), new DateRange(
-                new LocalDate.of(2019,11,1), new LocalDate.of(2019,11,4)));
+                LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)));
         // there should be a way to test a specific bike we want returned that somehow comes from the mock data
     }
     
     // TODO: Write system tests covering the three main use cases
+    // TODO: Use MockPaymentData from MockPaymentService (if constructed with empty string it will reject payment and accept it otherwise)
 
     @Test
     void testMatchQuery() {
