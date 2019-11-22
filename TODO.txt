@@ -2,6 +2,9 @@ Make tests for DateRange::overlaps function, that also check the throws
 
 The bike can have multiple booking at the same time for different DateRanges, the code will reflect that, but the 
 	design pattern needs to reflect that
+	Bike is not holding bookings for themselves, they are instead holding the date ranges for which they are taken
+	The only thing that is holding bookings is server
+	And the booking is holding customer and a set of quotes that were booked with this booking
 
 Also the Booking does not extend the functionality of Quote, it just has it as data
 	(there are problems with initializing the quote inside the Booking,

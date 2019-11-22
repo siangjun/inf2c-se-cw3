@@ -13,7 +13,7 @@ public class Bike {
     private Semaphore mutex;
     private BikeType type;
     private LocalDate dateAcquired;
-    private HashSet<Booking> bookings;  //Keep track of multiple bookings at different dates?
+    private HashSet<DateRange> bookings;  //Keep track of multiple bookings at different dates?
 
     /**
      * Creates an instance of {@link Bike} class. Sets the date acquired to now.
@@ -22,7 +22,7 @@ public class Bike {
     public Bike(BikeType type) {
         this.type = type;
         this.dateAcquired = LocalDate.now();
-        this.bookings = new HashSet<Booking>();
+        this.bookings = new HashSet<DateRange>();
         this.mutex = new Semaphore(1);
     }
 
@@ -34,7 +34,7 @@ public class Bike {
     public Bike(BikeType type, LocalDate dateAcquired) {
         this.type = type;
         this.dateAcquired = dateAcquired;
-        this.bookings = new HashSet<Booking>();
+        this.bookings = new HashSet<DateRange>();
         this.mutex = new Semaphore(1);
     }
     public BikeType getType() {
@@ -48,7 +48,7 @@ public class Bike {
      */
     public boolean isTaken(Query query) {
     	return bookings.stream().anyMatch((booking) -> 
-    		booking.getQuote().getQuery().getDateRange().overlaps(query.getDateRange()) );
+    		booking.overlaps(query.getDateRange()) );
     }
     
     /**
@@ -58,36 +58,36 @@ public class Bike {
      * @param quote Quote that the customer has chosen to book
      * @return null if the bike is no longer available, a new object of Booking that represents booking that was made
      */
-    public Booking lock(Customer customer, Quote quote) {
+    public boolean lock(Customer customer, Quote quote) {
     	// Make only one thread at a time to be possible to write to the set 
     	// Defensive as we don't know how the system may be designed when being implemented
-    	Booking booking = null;
+    	boolean ret = false;
     	this.mutex.acquireUninterruptibly();
 
     	try {
 			if (this.isTaken(quote.getQuery())) {
 				// The booking time was taken in between somebody got a quote and booked it
 				// The booking will return null by default
-				booking = null;
+				ret = false;
 			} else {
 				// The booking is not taken
-				booking = new Booking(customer, quote);
-				bookings.add(booking);
+				bookings.add(quote.getQuery().getDateRange());
+				ret = true;
 			}
     	} finally {
     		this.mutex.release();
     	}
-    	return booking;
+    	return ret;
     }
 
     /**
      * Removed the booking from the set so not litter code
      * @param booking to be removed
      */
-    public void unlock(Booking booking) {
+    public void unlock(Quote quote) {
     	this.mutex.acquireUninterruptibly();
     	try {
-    		bookings.remove(booking);
+    		bookings.remove(quote.getQuery().getDateRange());
     	} finally {
     		this.mutex.release();
     	}
