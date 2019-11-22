@@ -58,7 +58,7 @@ public class Bike {
      * @param quote Quote that the customer has chosen to book
      * @return null if the bike is no longer available, a new object of Booking that represents booking that was made
      */
-    public boolean lock(Customer customer, Quote quote) {
+    public boolean lock(Quote quote) {
     	// Make only one thread at a time to be possible to write to the set 
     	// Defensive as we don't know how the system may be designed when being implemented
     	boolean ret = false;

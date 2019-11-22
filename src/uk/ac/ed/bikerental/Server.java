@@ -1,14 +1,13 @@
 package uk.ac.ed.bikerental;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Server {
 	private ServerDataInterface serverData;
-	private PaymentService paymentService;
 	
-	public Server(ServerDataInterface sdata, PaymentService paymentService) {
+	public Server(ServerDataInterface sdata) {
 		this.serverData = sdata;
-		this.paymentService = paymentService;
 	}
 	
 	/**
@@ -26,7 +25,7 @@ public class Server {
 	public ArrayList<Quote> getQuotes(Customer customer, Query query) {
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
-		ArrayList<Bike> bikes = serverData.getBikes();
+		ArrayList<Bike> bikes = serverData.getProviders();
 		ArrayList<Bike> availableBikes = new ArrayList<Bike>();
 		bikes.forEach((bike) -> {
 			if (!bike.isTaken(query)) 
@@ -44,32 +43,80 @@ public class Server {
 		return availableQuotes;
 	}
 	
-	public Integer bookQuote(Customer customer, Quote[] quotes, PaymentService.PaymentData paymentData, boolean wantsDelivery) {
-		Booking booking = new Booking(customer);
+	/**
+	 * All of the quotes should be from the same provider as delivery 
+	 * and return to a partner should be possible (and not to partners)
+	 * @param customer
+	 * @param quotes
+	 * @param paymentData
+	 * @param wantsDelivery
+	 * @param locaiton
+	 * @return
+	 * @throws BikesUnavaliableException
+	 * @throws PaymentRefusedException
+	 */
+	public Integer bookQuote(Customer customer, 
+			Quote[] quotes, 
+			PaymentService.PaymentData paymentData, 
+			boolean wantsDelivery,
+			Location location) // Can be null if the wantsDelivery is false
+					throws BikesUnavaliableException, PaymentRefusedException {
+		/* TODO
+		 * check whether the provider is unique
+		 * check if the date is the same for all bikes
+		 * check if there is at least one quote
+		 * NULL? idk if we should do it
+		 */
+		DateRange dateRange = quotes[0].getQuery().getDateRange();
+		Provider provider = quotes[0].getProvider();
+		Booking booking = new Booking(customer, provider);
 		
 		boolean succ = true;
+		BigDecimal price = new BigDecimal(0.0);
 		for (Quote q: quotes) {
-			boolean s = q.getBike().lock(customer, q);
+			boolean s = q.getBike().lock(q);
 			if (!s) {
 				succ = false;
 				break;
 			} else {
 				booking.addQuote(q);
+				// TODO Add to price
 			}
 		}
-		if (succ) {
-			booking.setFinalised();
-		} else {
-			booking.freeBikes(); // will unlock all the bikes
+		
+		if (!succ) { 
+			booking.freeBikes();
+			throw new BikesUnavaliableException();
+		}
+		if (!PaymentServiceFactory.getDeliveryService().
+				confirmPayment(paymentData, price)) {
+			booking.freeBikes();
+			throw new PaymentRefusedException();
 		}
 		
-		// TODO add delivery (booking is deliverable btw)
+		booking.setFinalised();
 		
+		if (wantsDelivery) {
+			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
+					booking, 
+					provider.getLocation(), 
+					location, 
+					dateRange.getStart()); 
+			booking.setDeliveryState(DeliveryState.AwaitingDelivery);
+		}
+
 		return this.serverData.addBooking(booking);
 	}
 	
 	public void returnBike(Provider provider, int bookingNumber) {
 
+	}
+	
+	@SuppressWarnings("serial")
+	public class BikesUnavaliableException extends Exception {
+	}
+	@SuppressWarnings("serial")
+	public class PaymentRefusedException extends Exception {
 	}
 
 }
