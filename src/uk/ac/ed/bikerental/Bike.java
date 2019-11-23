@@ -1,5 +1,6 @@
 package uk.ac.ed.bikerental;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.concurrent.Semaphore;
@@ -10,10 +11,9 @@ import java.util.concurrent.Semaphore;
  * @author Siang Jun Teo
  */
 public class Bike {
-    private Semaphore mutex;
     private BikeType type;
     private LocalDate dateAcquired;
-    private HashSet<DateRange> bookings;  //Keep track of multiple bookings at different dates?
+    private HashSet<DateRange> bookings; 
 
     /**
      * Creates an instance of {@link Bike} class. Sets the date acquired to now.
@@ -23,7 +23,6 @@ public class Bike {
         this.type = type;
         this.dateAcquired = LocalDate.now();
         this.bookings = new HashSet<DateRange>();
-        this.mutex = new Semaphore(1);
     }
 
     /**
@@ -35,7 +34,6 @@ public class Bike {
         this.type = type;
         this.dateAcquired = dateAcquired;
         this.bookings = new HashSet<DateRange>();
-        this.mutex = new Semaphore(1);
     }
     public BikeType getType() {
         return this.type;
@@ -59,24 +57,14 @@ public class Bike {
      * @return null if the bike is no longer available, a new object of Booking that represents booking that was made
      */
     public boolean lock(Quote quote) {
-    	// Make only one thread at a time to be possible to write to the set 
-    	// Defensive as we don't know how the system may be designed when being implemented
     	boolean ret = false;
-    	this.mutex.acquireUninterruptibly();
 
-    	try {
-			if (this.isTaken(quote.getQuery())) {
-				// The booking time was taken in between somebody got a quote and booked it
-				// The booking will return null by default
-				ret = false;
-			} else {
-				// The booking is not taken
-				bookings.add(quote.getQuery().getDateRange());
-				ret = true;
-			}
-    	} finally {
-    		this.mutex.release();
-    	}
+		if (this.isTaken(quote.getQuery())) {
+			ret = false;
+		} else {
+			bookings.add(quote.getQuery().getDateRange());
+			ret = true;
+		}
     	return ret;
     }
 
@@ -85,11 +73,11 @@ public class Bike {
      * @param booking to be removed
      */
     public void unlock(Quote quote) {
-    	this.mutex.acquireUninterruptibly();
-    	try {
-    		bookings.remove(quote.getQuery().getDateRange());
-    	} finally {
-    		this.mutex.release();
-    	}
+		bookings.remove(quote.getQuery().getDateRange());
     }
+
+	public BigDecimal getPrice() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
