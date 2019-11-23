@@ -1,3 +1,4 @@
+The constructor for the DateRange now throws when end is before start
 Make bike just DateRange whan locking
 
 Make tests for DateRange::overlaps function, that also check the throws

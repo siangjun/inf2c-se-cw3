@@ -6,18 +6,23 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 public class DateRange {
-    private LocalDate start, end;
+	// No reason for this to not be final
+    private final LocalDate start, end;
     
     /**
      * Constructor of the class
+     * Invariant start \< end
      * @param start  the start of the date range
      * @param end    the end of the date range
+     * @throws IllegalArgumentException if end comes before start
      */
     public DateRange(LocalDate start, LocalDate end) {
-        // TODO: check the date range validity at init
         // see unit test
         this.start = start;
         this.end = end;
+        if (end.isBefore(start)) {
+        	throw new IllegalArgumentException();
+        }
     }
     
     /**
@@ -59,15 +64,10 @@ public class DateRange {
      *
      * @param other an object {@link DateRange}
      * @return      <code>true</code> if overlap found, <code>false</code> otherwise.
-     * @throws IllegalArgumentException If any of the ends are before the start
      * @throws IllegalArgumentException If other is null
      */
     public Boolean overlaps(DateRange other) {
     	if (other == null) throw new IllegalArgumentException();
-		if (end.isBefore(start) || 
-				other.getEnd().isBefore(other.getStart())){
-			throw new IllegalArgumentException();
-		}
 		if (start.isBefore(other.getEnd()) &&
 				other.getStart().isBefore(end)){
 			// overlaps

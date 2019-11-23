@@ -3,10 +3,12 @@ package uk.ac.ed.bikerental;
 public class Query {
 	private final Location location;
 	private final DateRange dateRange;
+	private final BikeType requestedBikeType;
 	
-	public Query(Location location, DateRange dRange) {
+	public Query(Location location, DateRange dRange, BikeType requestedBikeType) {
 		this.location = location;
 		this.dateRange = dRange;
+		this.requestedBikeType = requestedBikeType;
 	}
 	
 	/**
@@ -15,7 +17,8 @@ public class Query {
 	 * @return a new object of the query that is extended
 	 */
 	public Query createExtendedQuery(int days) {
-		return new Query(location, dateRange.createExtendedRange(days));
+		return new Query(location, dateRange.createExtendedRange(days), 
+				this.requestedBikeType);
 	}
 	
 	public Location getLocation() {
@@ -23,6 +26,10 @@ public class Query {
 	}
 	public DateRange getDateRange() {
 		return this.dateRange;
+	}
+
+	public BikeType getRequestedType() {
+		return this.requestedBikeType;
 	}
 	
 }

@@ -25,9 +25,8 @@ public class MockServerData implements ServerDataInterface{
 		return bookings.get(num);
 	}
 	
-	public void resolveBooking(Integer num) {
-		// TODO
-		
+	public void removeBooking(Integer num) {
+		bookings.remove(num);
 	}
 
 	@Override

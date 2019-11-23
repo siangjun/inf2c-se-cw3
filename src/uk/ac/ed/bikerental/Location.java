@@ -66,9 +66,4 @@ public class Location {
     }
 
     // You can add your own methods here
-
-    //test! TODO:Delete later
-    public static void main(String[] args) {
-        Location test = new Location("abc", "1 High Street");
-    }
 }

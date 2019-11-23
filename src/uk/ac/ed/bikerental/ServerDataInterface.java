@@ -10,5 +10,5 @@ public interface ServerDataInterface {
 	public ArrayList<Provider> getProviders();
 	public Integer addBooking(Booking booking);
 	public Booking getBooking(Integer num);
-	public void resolveBooking(Integer num);
+	public void removeBooking(Integer num);
 }

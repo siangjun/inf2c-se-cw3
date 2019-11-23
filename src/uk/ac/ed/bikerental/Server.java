@@ -1,6 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Server {
@@ -16,9 +17,10 @@ public class Server {
 	 * @param bike bike to check against query
 	 * @return <code>true</code> or <code>false</code> depending whether bike matches the query
 	 */
-	private boolean matchesQuery(Query query, Bike bike) {  // could be BikeType??
-		// TODO implement this
-		assert false;
+	private boolean matchesQuery(Query query, Bike bike) {  
+		if (bike.getType().equals(query.getRequestedType())) {
+			return true;
+		}
 		return false;
 	}
 
@@ -107,7 +109,23 @@ public class Server {
 		return this.serverData.addBooking(booking);
 	}
 	
-	public void returnBike(Provider provider, int bookingNumber) {
+	public void returnBike(Provider provider, int bookingNumber) 
+			throws ProviderIsNotAPartnerException {
+		Booking booking = this.serverData.getBooking(bookingNumber);
+		if (provider.equals(provider)) { 
+			// Delivered to the original provider
+			booking.resolveDeposit();
+			booking.freeBikes();
+		} else if (booking.getProvider().isPartnerWith(provider)) {
+			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
+					booking, 
+					provider.getLocation(), 
+					booking.getProvider().getLocation(), 
+					LocalDate.now());
+			// The Booking will resolve itself when it is delivered
+		} else {
+			throw new ProviderIsNotAPartnerException();
+		}
 
 	}
 	
@@ -117,5 +135,9 @@ public class Server {
 	@SuppressWarnings("serial")
 	public class PaymentRefusedException extends Exception {
 	}
+	@SuppressWarnings("serial")
+	public class ProviderIsNotAPartnerException extends Exception {
+	}
+			
 
 }

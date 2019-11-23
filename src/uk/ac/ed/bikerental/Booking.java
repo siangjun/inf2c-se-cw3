@@ -10,6 +10,7 @@ enum DeliveryState{
 }
 
 enum BookingState{
+	Uncompleted,
 	AwaitingCustomer,
 	BeingDelivered,
 	WithCustomer,
@@ -20,7 +21,6 @@ enum BookingState{
 public class Booking implements Deliverable{
 	private final Customer customer;
 	private ArrayList<Quote> quotes;
-	private boolean finalized;
 	private Provider provider;
 	private DeliveryState deliveryState;
 	private BookingState state;
@@ -30,17 +30,15 @@ public class Booking implements Deliverable{
 		this.customer = customer;
 		this.provider = provider;
 		this.quotes = new ArrayList<Quote>();
-		this.finalized = false;
 		this.deliveryState = DeliveryState.None;
 		this.state = BookingState.AwaitingCustomer;
 	}
 	
 	/**
-	 * Call after all the bikes are locked and 
-	 * TODO
+	 * Call after the booking was paid
 	 */
 	public void setFinalised() {
-		finalized = true;
+		this.state = BookingState.AwaitingCustomer;
 	}
 	public void addQuote(Quote quote) {
 		quotes.add(quote);
@@ -54,12 +52,19 @@ public class Booking implements Deliverable{
 		});
 	}
 	
+	public void resolveDeposit() {
+		// TODO
+	}
+	
 	public void setDeliveryState(DeliveryState state) {
 		this.deliveryState = state;
 	}
 
 	public Customer getCustomer() {
 		return this.customer;
+	}
+	public Provider getProvider() {
+		return this.provider;
 	}
 
 	@Override
@@ -80,10 +85,9 @@ public class Booking implements Deliverable{
 			this.deliveryState = DeliveryState.None;
 		} else if (this.state == BookingState.BeingReturned ){
 			this.state = BookingState.Resolved;
-			// TODO resolve
 			this.deliveryState = DeliveryState.None;
+			this.resolveDeposit();
+			this.freeBikes();
 		}
-		
 	}
-
 }

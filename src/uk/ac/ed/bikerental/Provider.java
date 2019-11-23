@@ -29,4 +29,10 @@ public class Provider {
 		return this.bikes;
 	}
 
+	public boolean isPartnerWith(Provider provider) {
+		return partners.stream().anyMatch((prov) -> {
+			return provider.equals(prov);
+		});
+	}
+
 }
