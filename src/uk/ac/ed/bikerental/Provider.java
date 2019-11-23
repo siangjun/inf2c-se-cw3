@@ -1,9 +1,11 @@
 package uk.ac.ed.bikerental;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Provider {
+	private ArrayList<Bike> bikes;
 	private Set<Provider> partners;
 	private Location location;
 
@@ -22,6 +24,9 @@ public class Provider {
 	
 	public Location getLocation() {
 		return this.location;
+	}
+	public ArrayList<Bike> getBikes(){
+		return this.bikes;
 	}
 
 }

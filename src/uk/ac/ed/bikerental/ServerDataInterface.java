@@ -7,7 +7,8 @@ import java.util.ArrayList;
  * @author Michal Glinski
  */
 public interface ServerDataInterface {
-	public ArrayList<Bike> getBikes();
+	public ArrayList<Provider> getProviders();
 	public Integer addBooking(Booking booking);
+	public Booking getBooking(Integer num);
 	public void resolveBooking(Integer num);
 }

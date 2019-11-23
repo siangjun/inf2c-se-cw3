@@ -5,30 +5,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MockServerData implements ServerDataInterface{
-	private ArrayList<Bike> bikes;
+	private ArrayList<Provider> providers;
 	private Map<Integer, Booking> bookings;
 	static Integer num = 0;
 	
 	public MockServerData() {
-		bikes = new ArrayList<Bike>();
+		providers = new ArrayList<Provider>();
 		bookings = new HashMap<Integer, Booking>();
 		// TODO: Implement this method
 	}
 
-	@Override
-	public ArrayList<Bike> getBikes() {
-		return this.bikes;
-	}
-	
 	public Integer addBooking(Booking booking) {
 		num++;
 		bookings.put(num, booking);
 		return num;
 	}
 	
+	public Booking getBooking(Integer num) {
+		return bookings.get(num);
+	}
+	
 	public void resolveBooking(Integer num) {
 		// TODO
 		
+	}
+
+	@Override
+	public ArrayList<Provider> getProviders() {
+		return this.providers;
 	}
 
 }

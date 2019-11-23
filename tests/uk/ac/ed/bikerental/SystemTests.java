@@ -21,7 +21,8 @@ public class SystemTests {
     void setUp() throws Exception {
         // Setup mock delivery service before each tests
         DeliveryServiceFactory.setupMockDeliveryService();
-        testServer = new Server(new MockServerData(), new MockPaymentService());
+        PaymentServiceFactory.setupMockPaymentService();
+        testServer = new Server(new MockServerData()) ;
         // Don't care how query fetching to the server works so we make a test one
         testQuery = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)));

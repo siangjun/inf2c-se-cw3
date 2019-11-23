@@ -25,16 +25,15 @@ public class Server {
 	public ArrayList<Quote> getQuotes(Customer customer, Query query) {
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
-		ArrayList<Bike> bikes = serverData.getProviders();
-		ArrayList<Bike> availableBikes = new ArrayList<Bike>();
-		bikes.forEach((bike) -> {
-			if (!bike.isTaken(query)) 
-				if (matchesQuery(query, bike))
-					availableBikes.add(bike);
-		});
+		ArrayList<Provider> providers = serverData.getProviders();
 		
-		availableBikes.forEach((bike) -> {
-			availableQuotes.add(new Quote(bike, query));
+		providers.forEach((provider) -> {
+			provider.getBikes().forEach((bike) -> {
+				if (!bike.isTaken(query))
+					if (matchesQuery(query, bike))
+						availableQuotes.add(new Quote(bike, query, provider));
+				
+			});
 		});
 		
 		// TODO: what if availableBikes/Quotes is empty then have to rerun the process with bigger query
@@ -88,7 +87,7 @@ public class Server {
 			booking.freeBikes();
 			throw new BikesUnavaliableException();
 		}
-		if (!PaymentServiceFactory.getDeliveryService().
+		if (!PaymentServiceFactory.getPaymentService().
 				confirmPayment(paymentData, price)) {
 			booking.freeBikes();
 			throw new PaymentRefusedException();
