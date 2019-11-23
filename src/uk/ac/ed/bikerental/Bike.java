@@ -39,6 +39,9 @@ public class Bike {
         return this.type;
     }
     
+	public BigDecimal getPrice() {
+		return this.type.getReplacementValue();
+	}
     /**
      * Checks whether bike is available for a give DateRange in a query
      * @param query
@@ -76,8 +79,7 @@ public class Bike {
 		bookings.remove(quote.getQuery().getDateRange());
     }
 
-	public BigDecimal getPrice() {
-		// TODO Auto-generated method stub
-		return null;
+	public LocalDate getAcquirementDate() {
+		return this.dateAcquired;
 	}
 }
