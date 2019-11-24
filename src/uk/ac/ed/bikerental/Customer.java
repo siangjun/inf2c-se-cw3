@@ -10,6 +10,11 @@ public class Customer {
 		this.location = null;
 		this.bookings = new ArrayList<Booking>();
 	}
+
+	public Customer(Location location) {
+		this.location = location;
+		this.bookings = new ArrayList<>();
+	}
 	
 	public void setLocation(Location location) {
 		this.location = location;

@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,16 +18,27 @@ public class SystemTests {
     // You can add attributes here
     Server testServer;
     Query testQuery;
+    ArrayList<Provider> providers;
+    Customer c1;
     @BeforeEach
     void setUp() throws Exception {
         // Setup mock delivery service before each tests
         DeliveryServiceFactory.setupMockDeliveryService();
         PaymentServiceFactory.setupMockPaymentService();
-        testServer = new Server(new MockServerData()) ;
+        providers = new ArrayList<>();
+        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"));
+        Provider p2 = new Provider(new Location("EH8 9LE", "1 Potterrow"));
+        p1.addPartner(p2);
+        p2.addPartner(p1);
+        providers.add(p1);
+        providers.add(p2);
+        c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
+        testServer = new Server(new MockServerData(providers));
+
         // Don't care how query fetching to the server works so we make a test one
         testQuery = new Query(new Location("EH8 9LE", ""), new DateRange(
-                LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)));
-        // there should be a way to test a specific bike we want returned that somehow comes from the mock data
+                LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
+                new BikeType());
     }
     
     // TODO: Write system tests covering the three main use cases
@@ -34,6 +46,6 @@ public class SystemTests {
 
     @Test
     void testMatchQuery() {
-
+        testServer.getQuotes(testQuery);
     }
 }

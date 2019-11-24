@@ -17,14 +17,11 @@ public class Server {
 	 * @param bike bike to check against query
 	 * @return <code>true</code> or <code>false</code> depending whether bike matches the query
 	 */
-	private boolean matchesQuery(Query query, Bike bike) {  
-		if (bike.getType().equals(query.getRequestedType())) {
-			return true;
-		}
-		return false;
+	private boolean matchesQuery(Query query, Bike bike) {
+		return bike.getType().equals(query.getRequestedType());
 	}
 
-	public ArrayList<Quote> getQuotes(Customer customer, Query query) {
+	public ArrayList<Quote> getQuotes(/*Customer customer,*/ Query query) {  // TODO: why is there customer?
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
 		ArrayList<Provider> providers = serverData.getProviders();
@@ -43,22 +40,22 @@ public class Server {
 		
 		return availableQuotes;
 	}
-	
+
 	/**
-	 * All of the quotes should be from the same provider as delivery 
+	 * All of the quotes should be from the same provider as delivery
 	 * and return to a partner should be possible (and not to partners)
 	 * @param customer
 	 * @param quotes
 	 * @param paymentData
 	 * @param wantsDelivery
-	 * @param locaiton
+	 * @param location
 	 * @return
 	 * @throws BikesUnavaliableException
 	 * @throws PaymentRefusedException
 	 */
-	public Integer bookQuote(Customer customer, 
-			Quote[] quotes, 
-			PaymentService.PaymentData paymentData, 
+	public Integer bookQuote(Customer customer,
+			Quote[] quotes,
+			PaymentService.PaymentData paymentData,
 			boolean wantsDelivery,
 			Location location) // Can be null if the wantsDelivery is false
 					throws BikesUnavaliableException, PaymentRefusedException {
@@ -71,7 +68,7 @@ public class Server {
 		DateRange dateRange = quotes[0].getQuery().getDateRange();
 		Provider provider = quotes[0].getProvider();
 		Booking booking = new Booking(customer, provider);
-		
+
 		boolean succ = true;
 		BigDecimal price = new BigDecimal(0.0);
 		for (Quote q: quotes) {
@@ -84,8 +81,8 @@ public class Server {
 				// TODO Add to price
 			}
 		}
-		
-		if (!succ) { 
+
+		if (!succ) {
 			booking.freeBikes();
 			throw new BikesUnavaliableException();
 		}
@@ -94,15 +91,15 @@ public class Server {
 			booking.freeBikes();
 			throw new PaymentRefusedException();
 		}
-		
+
 		booking.setFinalised();
-		
+
 		if (wantsDelivery) {
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
-					booking, 
-					provider.getLocation(), 
-					location, 
-					dateRange.getStart()); 
+					booking,
+					provider.getLocation(),
+					location,
+					dateRange.getStart());
 			booking.setDeliveryState(DeliveryState.AwaitingDelivery);
 		}
 

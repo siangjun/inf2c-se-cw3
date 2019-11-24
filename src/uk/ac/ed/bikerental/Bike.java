@@ -54,7 +54,6 @@ public class Bike {
     /**
      * Checks whether the bike is still available for the quote and if it is it creates a new Booking and makes 
      * the bike unavailable for the time of the booking
-     * @param customer Customer is needed to create a booking
      * @param quote Quote that the customer has chosen to book
      * @return null if the bike is no longer available, a new object of Booking that represents booking that was made
      */

@@ -9,8 +9,8 @@ public class MockServerData implements ServerDataInterface{
 	private Map<Integer, Booking> bookings;
 	static Integer num = 0;
 	
-	public MockServerData() {
-		providers = new ArrayList<Provider>();
+	public MockServerData(ArrayList<Provider> providers) {
+		this.providers = providers;
 		bookings = new HashMap<Integer, Booking>();
 		// TODO: Implement this method
 	}
