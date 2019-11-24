@@ -51,9 +51,12 @@ public class Bike {
      * @param query
      * @return <code>boolean</code> whether is taken
      */
-    public boolean isTaken(Query query) {
+	public boolean isTaken(DateRange dateRange) {
     	return bookings.stream().anyMatch((booking) -> 
-    		booking.overlaps(query.getDateRange()) );
+    		booking.overlaps(dateRange) );
+	}
+    public boolean isTaken(Query query) {
+    	return isTaken(query.getDateRange());
     }
     
     /**
@@ -63,10 +66,10 @@ public class Bike {
      * @return <code>false</code> if the bike is no longer available, <code>true</code> otherwise
      */
     public boolean lock(Quote quote) {
-		if (this.isTaken(quote.getQuery())) {
+		if (this.isTaken(quote.getDateRange())) {
 			return false;
 		} else {
-			bookings.add(quote.getQuery().getDateRange());
+			bookings.add(quote.getDateRange());
 			return true;
 		}
     }
@@ -76,7 +79,7 @@ public class Bike {
      * @param quote to be removed
      */
     public void unlock(Quote quote) {
-		bookings.remove(quote.getQuery().getDateRange());
+		bookings.remove(quote.getDateRange());
     }
 
 	public LocalDate getAcquirementDate() {
