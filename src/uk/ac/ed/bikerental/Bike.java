@@ -55,9 +55,6 @@ public class Bike {
     	return bookings.stream().anyMatch((booking) -> 
     		booking.overlaps(dateRange) );
 	}
-    public boolean isTaken(Query query) {
-    	return isTaken(query.getDateRange());
-    }
     
     /**
      * Checks whether the bike is still available for the quote and if it is it creates a new
