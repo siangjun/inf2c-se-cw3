@@ -32,7 +32,7 @@ public class Server {
 						BigDecimal deposit = bikePrice.multiply(provider.getDepositRate());
 
 						availableQuotes.add(
-								new Quote(bike, query, provider, 
+								new Quote(bike, provider, query.getDateRange(),
 										bikePrice, 
 										deposit));
 					}
@@ -66,7 +66,7 @@ public class Server {
 		 * check if there is at least one quote
 		 * NULL? idk if we should do it
 		 */
-		DateRange dateRange = quotes[0].getQuery().getDateRange();
+		DateRange dateRange = quotes[0].getDateRange();
 		Provider provider = quotes[0].getProvider();
 		Booking booking = new Booking(customer, provider);
 
