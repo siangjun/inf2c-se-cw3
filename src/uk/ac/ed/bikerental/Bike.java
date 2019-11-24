@@ -19,6 +19,7 @@ public class Bike {
     /**
      * Creates an instance of {@link Bike} class. Sets the date acquired to now.
      * @param type of class {@link BikeType}.
+     * @param valuationPolicy {@link ValuationPolicy}.
      */
     public Bike(BikeType type, ValuationPolicy valuationPolicy) {
         this.type = type;
@@ -28,11 +29,12 @@ public class Bike {
     }
 
     /**
-     * Creates an instance of {@link Bike} class.
+     * Creates an instance of {@link Bike} class, with chance to set dateAcquired.
      * @param type of class {@link BikeType}.
+     * @param valuationPolicy {@link ValuationPolicy}.
      * @param dateAcquired of class {@link LocalDate}.
      */
-    public Bike(BikeType type, LocalDate dateAcquired) {
+    public Bike(BikeType type, ValuationPolicy valuationPolicy, LocalDate dateAcquired) {
         this.type = type;
         this.dateAcquired = dateAcquired;
         this.bookings = new HashSet<DateRange>();
@@ -55,10 +57,10 @@ public class Bike {
 	}
     
     /**
-     * Checks whether the bike is still available for the quote and if it is it creates a new Booking and makes 
-     * the bike unavailable for the time of the booking
-     * @param quote Quote that the customer has chosen to book
-     * @return null if the bike is no longer available, a new object of Booking that represents booking that was made
+     * Checks whether the bike is still available for the quote and if it is it creates a new
+     * {@link Booking} and make the bike unavailable for the time of the booking
+     * @param quote {@link Quote} that the customer has chosen to book
+     * @return <code>false</code> if the bike is no longer available, <code>true</code> otherwise
      */
     public boolean lock(Quote quote) {
 		if (this.isTaken(quote.getDateRange())) {
@@ -71,7 +73,7 @@ public class Bike {
 
     /**
      * Removed the booking from the set so not litter code
-     * @param booking to be removed
+     * @param quote to be removed
      */
     public void unlock(Quote quote) {
 		bookings.remove(quote.getDateRange());

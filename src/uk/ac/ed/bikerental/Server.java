@@ -111,7 +111,7 @@ public class Server {
 	public void returnBike(Provider provider, int bookingNumber) 
 			throws ProviderIsNotAPartnerException {
 		Booking booking = this.serverData.getBooking(bookingNumber);
-		if (provider.equals(provider)) { 
+		if (provider.equals(provider)) { // TODO: provider.equals calls to itself?
 			// Delivered to the original provider
 			booking.resolveDeposit();
 			booking.freeBikes();
