@@ -17,4 +17,17 @@ public class BikeType { // TODO: is this an abstract class?
     public BigDecimal getReplacementValue() {
     	return this.replacementValue;
     }
+    
+    public boolean equals(Object obj) {
+        // equals method for testing equality in tests
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        assert(false); // TODO implement BikeType equals 
+        // As a note it is already used in the Server matchesQuery function
+        return false;
+    }
 }
