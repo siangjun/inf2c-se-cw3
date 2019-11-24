@@ -46,6 +46,9 @@ public class SystemTests {
 
     @Test
     void testMatchQuery() {
-        testServer.getQuotes(testQuery);
+        ArrayList<Quote> testQuotes = new ArrayList<>();
+
+        testQuotes.add()
+        assertEquals(testServer.getQuotes(testQuery);
     }
 }
