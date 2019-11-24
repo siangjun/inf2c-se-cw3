@@ -1,5 +1,6 @@
 package uk.ac.ed.bikerental;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 enum DeliveryState{
@@ -24,6 +25,7 @@ public class Booking implements Deliverable{
 	private Provider provider;
 	private DeliveryState deliveryState;
 	private BookingState state;
+	private BigDecimal deposit;
 
 	
 	public Booking(Customer customer, Provider provider) {
@@ -32,13 +34,16 @@ public class Booking implements Deliverable{
 		this.quotes = new ArrayList<Quote>();
 		this.deliveryState = DeliveryState.None;
 		this.state = BookingState.AwaitingCustomer;
+		this.deposit = null;
 	}
 	
 	/**
 	 * Call after the booking was paid
+	 * @param deposit the deposit amount that will be returned to the client
 	 */
-	public void setFinalised() {
+	public void setFinalised(BigDecimal deposit) {
 		this.state = BookingState.AwaitingCustomer;
+		this.deposit = deposit;
 	}
 	public void addQuote(Quote quote) {
 		quotes.add(quote);
@@ -53,7 +58,11 @@ public class Booking implements Deliverable{
 	}
 	
 	public void resolveDeposit() {
-		// TODO
+		if (deposit == null) {
+			
+		} else {
+			
+		}
 	}
 	
 	public void setDeliveryState(DeliveryState state) {

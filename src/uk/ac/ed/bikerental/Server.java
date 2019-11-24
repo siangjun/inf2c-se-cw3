@@ -24,19 +24,22 @@ public class Server {
 	public ArrayList<Quote> getQuotes(/*Customer customer,*/ Query query) {  // TODO: why is there customer?
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
-		ArrayList<Provider> providers = serverData.getProviders();
-		
-		providers.forEach((provider) -> {
+		serverData.getProviders().forEach((provider) -> {
 			provider.getBikes().forEach((bike) -> {
 				if (!bike.isTaken(query))
 					if (matchesQuery(query, bike))
-						availableQuotes.add(new Quote(bike, query, provider));
+						availableQuotes.add(
+								new Quote(bike, query, provider, bike.getPrice(), deposit));
 				
 			});
 		});
 		
-		// TODO: what if availableBikes/Quotes is empty then have to rerun the process with bigger query
-		//		 Maybe add a new function that will check all the bikes give query in this(Server) class
+		return availableQuotes;
+	}
+	public ArrayList<Quote> getQuotes(Customer customer, Query query) {
+		ArrayList<Quote> availableQuotes = __getQuotes(customer, query);
+		
+		// TODO I do not understand the point of extending the query
 		
 		return availableQuotes;
 	}
@@ -70,7 +73,8 @@ public class Server {
 		Booking booking = new Booking(customer, provider);
 
 		boolean succ = true;
-		BigDecimal price = new BigDecimal(0.0);
+		BigDecimal price = new BigDecimal(0);
+		BigDecimal deposit = new BigDecimal(0);
 		for (Quote q: quotes) {
 			boolean s = q.getBike().lock(q);
 			if (!s) {
@@ -78,7 +82,8 @@ public class Server {
 				break;
 			} else {
 				booking.addQuote(q);
-				// TODO Add to price
+				price = price.add(q.getPrice());
+				deposit = deposit.add(q.getDeposit());
 			}
 		}
 
@@ -87,13 +92,13 @@ public class Server {
 			throw new BikesUnavaliableException();
 		}
 		if (!PaymentServiceFactory.getPaymentService().
-				confirmPayment(paymentData, price)) {
+				confirmPayment(paymentData, price.add(deposit))) {
 			booking.freeBikes();
 			throw new PaymentRefusedException();
 		}
-
-		booking.setFinalised();
-
+		
+		booking.setFinalised(deposit);
+		
 		if (wantsDelivery) {
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
 					booking,
