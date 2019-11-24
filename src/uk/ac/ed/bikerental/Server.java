@@ -26,7 +26,7 @@ public class Server {
 		
 		serverData.getProviders().forEach((provider) -> {
 			provider.getBikes().forEach((bike) -> {
-				if (!bike.isTaken(query))
+				if (!bike.isTaken(query.getDateRange()))
 					if (matchesQuery(query, bike)) {
 						BigDecimal bikePrice = bike.getPrice();
 						BigDecimal deposit = bikePrice.multiply(provider.getDepositRate());
