@@ -10,8 +10,8 @@ public class DateRange {
     private final LocalDate start, end;
     
     /**
-     * Constructor of the class
-     * Invariant start \< end
+     * Constructor of the class.
+     * Invariant start < end.
      * @param start  the start of the date range
      * @param end    the end of the date range
      * @throws IllegalArgumentException if end comes before start

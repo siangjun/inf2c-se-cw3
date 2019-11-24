@@ -17,7 +17,7 @@ public class Provider {
 	}
 	public Provider(Location location, BigDecimal depositRate){
 		this.partners = new HashSet<Provider>();
-		this.bikes = new ArrayList<Bike>();
+		this.bikes = new ArrayList<Bike>();  //TODO: bikes never added into list.
 		this.depositRate = depositRate;
 		this.location = location;
 	}

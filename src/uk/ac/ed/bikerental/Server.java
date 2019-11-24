@@ -21,10 +21,11 @@ public class Server {
 		return bike.getType().getSubType().equals(query.getRequestedType().getSubType());
 	}
 
-	public ArrayList<Quote> getQuotes(Query query) {  // TODO: why is there customer?
+	public ArrayList<Quote> getQuotes(Query query) {
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
 		serverData.getProviders().forEach((provider) -> {
+			// TODO: check if provider is near query location
 			provider.getBikes().forEach((bike) -> {
 				if (!bike.isTaken(query))
 					if (matchesQuery(query, bike)) {
