@@ -18,7 +18,7 @@ public class Server {
 	 * @return <code>true</code> or <code>false</code> depending whether bike matches the query
 	 */
 	private boolean matchesQuery(Query query, Bike bike) {
-		return bike.getType().equals(query.getRequestedType());
+		return bike.getType().getSubType().equals(query.getRequestedType().getSubType());
 	}
 
 	public ArrayList<Quote> getQuotes(Query query) {  // TODO: why is there customer?
