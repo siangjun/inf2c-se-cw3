@@ -26,8 +26,8 @@ public class SystemTests {
         DeliveryServiceFactory.setupMockDeliveryService();
         PaymentServiceFactory.setupMockPaymentService();
         providers = new ArrayList<>();
-        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"));
-        Provider p2 = new Provider(new Location("EH8 9LE", "1 Potterrow"));
+        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 10.0);
+        Provider p2 = new Provider(new Location("EH8 9LE", "1 Potterrow"), 20.0);
         p1.addPartner(p2);
         p2.addPartner(p1);
         providers.add(p1);
@@ -38,7 +38,7 @@ public class SystemTests {
         // Don't care how query fetching to the server works so we make a test one
         testQuery = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
-                new BikeType());
+                new BikeType((5.0)));
     }
     
     // TODO: Write system tests covering the three main use cases

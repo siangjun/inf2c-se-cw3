@@ -7,6 +7,9 @@ import java.time.temporal.ChronoUnit;
 public class DoubleDecliningBalanceDepreciationValuationPolicy implements ValuationPolicy {
 	private BigDecimal depreciationRate;
 	
+	public DoubleDecliningBalanceDepreciationValuationPolicy(double depRate) {
+		this(new BigDecimal(depRate));
+	}
 	public DoubleDecliningBalanceDepreciationValuationPolicy(BigDecimal depreciationRate) {
 		this.depreciationRate = depreciationRate;
 	}
