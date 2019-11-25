@@ -51,16 +51,16 @@ public class Server {
 	 * @param paymentData
 	 * @param wantsDelivery
 	 * @param location
-	 * @return
-	 * @throws BikesUnavaliableException
+	 * @return // TODO: expected to return an object representing the details of the booking, including a unique booking number
+	 * @throws BikesUnavailableException
 	 * @throws PaymentRefusedException
 	 */
 	public Integer bookQuote(Customer customer,
 			Quote[] quotes,
 			PaymentService.PaymentData paymentData,
 			boolean wantsDelivery,
-			Location location) // Can be null if the wantsDelivery is false
-					throws BikesUnavaliableException, PaymentRefusedException {
+			Location location) // Can be null if the wantsDelivery is false TODO: Location can be fetched from customer?
+					throws BikesUnavailableException, PaymentRefusedException {
 		/* TODO
 		 * check whether the provider is unique
 		 * check if the date is the same for all bikes
@@ -87,7 +87,7 @@ public class Server {
 
 		if (!succ) {
 			booking.freeBikes();
-			throw new BikesUnavaliableException();
+			throw new BikesUnavailableException();
 		}
 		if (!PaymentServiceFactory.getPaymentService().
 				confirmPayment(paymentData, price.add(price.multiply(depositRate)))) {
@@ -130,7 +130,7 @@ public class Server {
 	}
 	
 	@SuppressWarnings("serial")
-	public class BikesUnavaliableException extends Exception {
+	public class BikesUnavailableException extends Exception {
 	}
 	@SuppressWarnings("serial")
 	public class PaymentRefusedException extends Exception {

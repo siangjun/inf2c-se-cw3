@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  *
  */
 public class MockPaymentService implements PaymentService {
-	public class MockPaymentData extends PaymentData{
+	public static class MockPaymentData extends PaymentData{
 		private String data;
 
 		@Override
