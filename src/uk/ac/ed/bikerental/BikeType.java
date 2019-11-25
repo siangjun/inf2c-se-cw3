@@ -2,7 +2,7 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 
-public class BikeType { // TODO: is this an abstract class?
+public class BikeType { 
 	enum SubType{
 		Mountain,
 		Street,

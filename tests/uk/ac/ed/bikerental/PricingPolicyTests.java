@@ -11,6 +11,4 @@ public class PricingPolicyTests {
     void setUp() throws Exception {
         // Put setup here
     }
-    
-    // TODO: Write tests for pricing policies
 }

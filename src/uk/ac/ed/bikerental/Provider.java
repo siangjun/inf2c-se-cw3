@@ -17,7 +17,7 @@ public class Provider {
 	}
 	public Provider(Location location, BigDecimal depositRate){
 		this.partners = new HashSet<Provider>();
-		this.bikes = new ArrayList<Bike>();  //TODO: bikes never added into list.
+		this.bikes = new ArrayList<Bike>(); 
 		this.depositRate = depositRate;
 		this.location = location;
 	}
@@ -38,6 +38,9 @@ public class Provider {
 	}
 	public BigDecimal getDepositRate() {
 		return this.depositRate;
+	}
+	public void addBike(Bike bike) {
+		this.bikes.add(bike);
 	}
 
 	public boolean isPartnerWith(Provider provider) {
