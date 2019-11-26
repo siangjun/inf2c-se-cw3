@@ -112,5 +112,13 @@ public class DateRange {
 	public DateRange createExtendedRange(int days) {
 		return new DateRange(start.minusDays(days), end.plusDays(days));
 	}
-    
+
+    /**
+     * @return The date range in {@link String}. For example for 10/01/2000 - 14/01/2000, it will be
+     *         (2000-01-10 - 2000-01-14)
+     */
+	@Override
+    public String toString() {
+        return "(" + start.toString() + " - " + end.toString() + ")";
+    }
 }

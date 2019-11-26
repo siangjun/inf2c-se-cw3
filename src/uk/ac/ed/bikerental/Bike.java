@@ -48,7 +48,7 @@ public class Bike {
 	}
     /**
      * Checks whether bike is available for a give DateRange in a query
-     * @param query
+     * @param dateRange
      * @return <code>boolean</code> whether is taken
      */
 	public boolean isTaken(DateRange dateRange) {
@@ -82,4 +82,9 @@ public class Bike {
 	public LocalDate getAcquirementDate() {
 		return this.dateAcquired;
 	}
+
+	@Override
+    public String toString() {
+        return "(" + type.toString() + ", " + dateAcquired.toString() + ")";
+    }
 }

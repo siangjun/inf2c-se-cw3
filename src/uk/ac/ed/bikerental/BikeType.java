@@ -26,5 +26,10 @@ public class BikeType {
     public SubType getSubType() {
     	return this.type;
     }
+
+    @Override
+	public String toString() {
+		return type.name();
+	}
     
 }

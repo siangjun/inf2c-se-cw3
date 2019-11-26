@@ -1,6 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Quote {
 	private final Bike bike;
@@ -32,6 +33,24 @@ public class Quote {
 	}
 	public BigDecimal getDeposit() {
 		return this.deposit;
+	}
+
+	@Override
+	public String toString() {
+		return "Bike: " + bike.toString() + "\nProvider: " + provider.toString() + "\nPrice: " +
+				price.toString() + "\nDeposit: " + deposit.toString() + "\nDate range:" +
+				dateRange.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (Objects.isNull(obj)) return false;
+		if (this.getClass() != obj.getClass()) return false;
+		Quote other = (Quote) obj;
+		return this.bike.equals(other.bike) && this.provider.equals(other.provider) &&
+				this.price.equals(other.price) && this.deposit.equals(other.deposit) &&
+				this.dateRange.equals(other.dateRange);
 	}
 
 }

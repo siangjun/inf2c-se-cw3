@@ -65,5 +65,13 @@ public class Location {
         return address;
     }
 
+    /**
+     * @return the location with address then postcode.
+     */
     // You can add your own methods here
+    @Override
+    public String toString() {
+        return address + ", " + postcode;
+    }
+
 }

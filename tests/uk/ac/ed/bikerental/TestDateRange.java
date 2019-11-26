@@ -13,7 +13,6 @@ class TestDateRange {
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test
-        // is using "this" necessary? -- SJ
         this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7),
                 LocalDate.of(2019, 1, 10));
         this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5),
@@ -70,4 +69,9 @@ class TestDateRange {
 				new DateRange(LocalDate.of(2019, 1, 4), 
 							  LocalDate.of(2019, 1, 13))));
 	}
+
+	@Test
+    void testToString() {
+        assertEquals("(2019-01-07 - 2019-01-10)", dateRange1.toString());
+    }
 }

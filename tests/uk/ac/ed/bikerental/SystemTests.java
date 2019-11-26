@@ -19,20 +19,21 @@ import java.util.TreeSet;
  *
  * @author Siang Jun Teo
  */
-public class SystemTests {
+class SystemTests {
     // You can add attributes here
-    Server testServer;
-    Query testQuery1;
-    Query testQuery2;
-    Query testQuery3;
-    ArrayList<Provider> testProviders;
-    ArrayList<Quote> testQuotes;
-    Customer c1;
-    Bike b1;
-    Bike b2;
-    Quote q1;
-    Quote q2;
-    Quote quotes[];
+    private Server testServer;
+    private Query testQuery1;
+    private Query testQuery2;
+    private Query testQuery3;
+    private ArrayList<Provider> testProviders;
+    private ArrayList<Quote> testQuotes;
+    private Customer c1;
+    private Bike b1;
+    private Bike b2;
+    private Quote q1;
+    private Quote q2;
+    private Quote quotes[];
+    private Quote lockedQuotes[];
 
     @BeforeEach
     void setUp() throws Exception {
@@ -40,10 +41,9 @@ public class SystemTests {
         DeliveryServiceFactory.setupMockDeliveryService();
         PaymentServiceFactory.setupMockPaymentService();
         testProviders = new ArrayList<>();
-        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 10.0);
+        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 0.5);
 
-
-        Provider p2 = new Provider(new Location("EH8 9LE", "11 Crichton Street"), 20.0);
+        Provider p2 = new Provider(new Location("EH8 9LE", "11 Crichton Street"), 0.5);
         p1.addPartner(p2);
         p2.addPartner(p1);
         testProviders.add(p1);
@@ -55,6 +55,8 @@ public class SystemTests {
                 new LinearDepreciationValuationPolicy(0.5));
         b2 = new Bike(new BikeType((5.0), BikeType.SubType.BMX),
                 new LinearDepreciationValuationPolicy(0.5));
+
+        p1.addBike(b1);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), b1.getPrice(),
@@ -85,6 +87,9 @@ public class SystemTests {
         testQuotes.add(q1);
         quotes = new Quote[1];
         quotes[0] = q1;
+        lockedQuotes = new Quote[1];
+        lockedQuotes[0] = q2;
+
     }
     
     // TODO: Write system tests covering the three main use cases
@@ -129,6 +134,12 @@ public class SystemTests {
 
     @Test
     void testBookQuoteBikeUnavailable() throws Exception {
-
+        assertThrows(Server.BikesUnavailableException.class, () -> {
+            testServer.bookQuote(c1, lockedQuotes, new MockPaymentService.MockPaymentData("test"),
+                    false, null);
+        });
     }
+
+    //@Test
+    //void
 }

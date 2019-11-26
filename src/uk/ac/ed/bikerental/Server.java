@@ -46,14 +46,14 @@ public class Server {
 	/**
 	 * All of the quotes should be from the same provider as delivery
 	 * and return to a partner should be possible (and not to partners)
-	 * @param customer
-	 * @param quotes
-	 * @param paymentData
-	 * @param wantsDelivery
-	 * @param location
+	 * @param customer the person booking the quote
+	 * @param quotes an array of quotes to book
+	 * @param paymentData details of payment
+	 * @param wantsDelivery boolean on whether the customer wants delivery
+	 * @param location location to deliver to
 	 * @return // TODO: expected to return an object representing the details of the booking, including a unique booking number
-	 * @throws BikesUnavailableException
-	 * @throws PaymentRefusedException
+	 * @throws BikesUnavailableException if the bike in the quote is unavailable.
+	 * @throws PaymentRefusedException if the payment fails.
 	 */
 	public Integer bookQuote(Customer customer,
 			Quote[] quotes,
