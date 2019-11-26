@@ -3,16 +3,8 @@ package uk.ac.ed.bikerental;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Unit tests for the entire system.
@@ -52,19 +44,19 @@ class SystemTests {
         c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
 
         b1 = new Bike(new BikeType((5.0), BikeType.SubType.Mountain),
-                new LinearDepreciationValuationPolicy(0.5));
+                new LinearDepreciationValuationPolicy(0.5)); //TODO: change so that we're not using extended submodules
         b2 = new Bike(new BikeType((5.0), BikeType.SubType.BMX),
                 new LinearDepreciationValuationPolicy(0.5));
 
         p1.addBike(b1);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019,11,4)), b1.getPrice(),
-                b1.getPrice().multiply(p1.getDepositRate()));
+                LocalDate.of(2019,11,4)), b1.getValue(),
+                b1.getValue().multiply(p1.getDepositRate()));
 
         q2 = new Quote(b2, p1, new DateRange(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019,11,4)), b2.getPrice(),
-                b2.getPrice().multiply(p1.getDepositRate()));
+                LocalDate.of(2019,11,4)), b2.getValue(),
+                b2.getValue().multiply(p1.getDepositRate()));
 
         testServer = new Server(new MockServerData(testProviders));
 
@@ -101,7 +93,7 @@ class SystemTests {
     }
 
     @Test
-    void testGetQuoteProviderFar() {  //TODO: Currently false positive because testMatchQuery fails.
+    void testGetQuoteProviderFar() {  // TODO: Fails because function doesn't check if provider is far
         assertEquals(new ArrayList<Quote>(), testServer.getQuotes(testQuery2));
     }
 
@@ -125,7 +117,7 @@ class SystemTests {
     }
 
     @Test
-    void testBookQuotePaymentFailed() throws Exception {
+    void testBookQuotePaymentFailed() {
         assertThrows(Server.PaymentRefusedException.class, () -> {
             testServer.bookQuote(c1, quotes, new MockPaymentService.MockPaymentData(""),
                     false, null);
@@ -133,13 +125,20 @@ class SystemTests {
     }
 
     @Test
-    void testBookQuoteBikeUnavailable() throws Exception {
+    void testBookQuoteBikeUnavailable() {
         assertThrows(Server.BikesUnavailableException.class, () -> {
             testServer.bookQuote(c1, lockedQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
         });
     }
 
-    //@Test
-    //void
+    @Test
+    void testReturnBike() {
+        testServer.getServerData().getBooking(1);
+    }
+
+    @Test
+    void testIntegration() {
+        // TODO: Run a full simulation test of a successful run
+    }
 }

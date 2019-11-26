@@ -29,7 +29,7 @@ public class Server {
 			provider.getBikes().forEach((bike) -> {
 				if (!bike.isTaken(query.getDateRange()))
 					if (matchesQuery(query, bike)) {
-						BigDecimal bikePrice = bike.getPrice();
+						BigDecimal bikePrice = bike.getValue();
 						BigDecimal deposit = bikePrice.multiply(provider.getDepositRate());
 
 						availableQuotes.add(
@@ -127,6 +127,10 @@ public class Server {
 			throw new ProviderIsNotAPartnerException();
 		}
 
+	}
+
+	ServerDataInterface getServerData() {
+		return this.serverData;
 	}
 	
 	@SuppressWarnings("serial")

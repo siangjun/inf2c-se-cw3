@@ -35,15 +35,18 @@ public class Bike {
      * @param dateAcquired of class {@link LocalDate}.
      */
     public Bike(BikeType type, ValuationPolicy valuationPolicy, LocalDate dateAcquired) {
+        // TODO: add something to make sure bike does not have a dateAcquired later than now?
         this.type = type;
         this.dateAcquired = dateAcquired;
+        this.valuationPolicy = valuationPolicy;
         this.bookings = new HashSet<DateRange>();
     }
     public BikeType getType() {
         return this.type;
     }
-    
-	public BigDecimal getPrice() {
+
+
+	public BigDecimal getValue() {
 		return this.valuationPolicy.calculateValue(this, LocalDate.now());
 	}
     /**

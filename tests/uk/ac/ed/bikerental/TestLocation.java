@@ -52,4 +52,9 @@ class TestLocation {
     void testGetAddress() {
         assertEquals("11 Crichton Street", location1.getAddress());
     }
+
+    @Test
+    void testToString() {
+        assertEquals("11 Crichton Street, EH8 9LE", location1.toString());
+    }
 }
