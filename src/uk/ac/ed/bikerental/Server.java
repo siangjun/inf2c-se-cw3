@@ -141,6 +141,7 @@ public class Server {
 			booking.freeBikes();
 		} else if (booking.getProvider().isPartnerWith(provider)) { 
 			booking.setDeliveryState(DeliveryState.AwaitingReturn);
+			booking.wasGivenToPartner();
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
 					booking, 
 					provider.getLocation(), 

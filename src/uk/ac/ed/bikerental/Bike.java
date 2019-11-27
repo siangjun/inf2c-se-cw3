@@ -9,7 +9,6 @@ import java.util.HashSet;
  * @author Michal Glinski
  * @author Siang Jun Teo
  */
-// TODO Add bike state?
 public class Bike {
     private BikeType type;
     private LocalDate dateAcquired;
@@ -35,7 +34,6 @@ public class Bike {
      * @param dateAcquired of class {@link LocalDate}.
      */
     public Bike(BikeType type, ValuationPolicy valuationPolicy, LocalDate dateAcquired) {
-        // TODO: add something to make sure bike does not have a dateAcquired later than now?
         this.type = type;
         this.dateAcquired = dateAcquired;
         this.valuationPolicy = valuationPolicy;
