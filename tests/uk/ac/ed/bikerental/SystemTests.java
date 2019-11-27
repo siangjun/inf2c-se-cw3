@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -49,12 +50,13 @@ class SystemTests {
 
         c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
 
-        b1 = new Bike(new BikeType((5.0), BikeType.SubType.Mountain),
+        b1 = new Bike(new BikeType((500), BikeType.SubType.Mountain),
                 new LinearDepreciationValuationPolicy(0.5)); //TODO: change so that we're not using extended submodules
-        b2 = new Bike(new BikeType((5.0), BikeType.SubType.BMX),
+        b2 = new Bike(new BikeType((500), BikeType.SubType.BMX),
                 new LinearDepreciationValuationPolicy(0.5));
 
         p1.addBike(b1);
+        p3.addBike(b2);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), b1.getValue(),
@@ -135,6 +137,15 @@ class SystemTests {
     }
 
     @Test
+    void testBookQuoteDeliveryTrueLocationNull() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> {
+            int t = testServer.bookQuote(c1, quotes,
+                    new MockPaymentService.MockPaymentData("test"), true,
+                    null);
+        });
+    }
+
+    @Test
     void testBookQuotePaymentFailed() {
         assertThrows(Server.PaymentRefusedException.class, () -> {
             testServer.bookQuote(c1, quotes, new MockPaymentService.MockPaymentData(""),
@@ -173,8 +184,35 @@ class SystemTests {
         });
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Test
-    void testIntegration() {
-        // TODO: Run a full simulation test of a successful run
+    void testIntegration() throws Exception {
+        Location deliveryAdd1 = new Location("EH9 1SE", "16 East Mayfield");
+        Location deliveryAdd2 = new Location("EH3 9QG", "123 Fountainbridge");
+        Customer testCustomer1 = new Customer(deliveryAdd1);
+        Customer testCustomer2 = new Customer(deliveryAdd2);
+        ArrayList<Quote> quotes1 = testServer.getQuotes(testQuery1);
+        ArrayList<Quote> quotes2 = testServer.getQuotes(testQuery3);
+        int bookingNo1 = testServer.bookQuote(testCustomer1, (Quote[]) quotes1.toArray(),
+                new MockPaymentService.MockPaymentData("test"), true, deliveryAdd2);
+        int bookingNo2 = testServer.bookQuote(testCustomer1, (Quote[]) quotes2.toArray(),
+                new MockPaymentService.MockPaymentData("test"), false, null);
+        Booking testBooking1 = testServer.getServerData().getBooking(bookingNo1);
+        Booking testBooking2 = testServer.getServerData().getBooking(bookingNo2);
+        assertEquals(DeliveryState.AwaitingDelivery, testBooking1.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, testBooking1.getState());
+        assertEquals(DeliveryState.None, testBooking2.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, testBooking2.getState());
+        MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
+        ArrayList<Booking> delBookings = new ArrayList<>();
+        delBookings.add(testBooking1);
+        assertEquals(delBookings, deliveryService.getPickupsOn(LocalDate.of(2019,11,1)));
+        deliveryService.carryOutPickups(LocalDate.of(2019,11,1));
+        deliveryService.carryOutDropoffs();
+        assertEquals(DeliveryState.AwaitingDelivery, testBooking1.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, testBooking1.getState());
     }
 }
