@@ -8,7 +8,7 @@ public class DoubleDecliningBalanceDepreciationValuationPolicy implements Valuat
 	private BigDecimal depreciationRate;
 	
 	public DoubleDecliningBalanceDepreciationValuationPolicy(double depRate) {
-		this(new BigDecimal(depRate));
+		this(BigDecimal.valueOf(depRate));
 	}
 	public DoubleDecliningBalanceDepreciationValuationPolicy(BigDecimal depreciationRate) {
 		this.depreciationRate = depreciationRate;
@@ -18,9 +18,9 @@ public class DoubleDecliningBalanceDepreciationValuationPolicy implements Valuat
 	public BigDecimal calculateValue(Bike bike, LocalDate date) {
 		long years = ChronoUnit.YEARS.between(bike.getAcquirementDate(), date);
 		BigDecimal orgPrice = bike.getType().getReplacementValue();
-		BigDecimal depreciation = new BigDecimal(1);
-		depreciation = depreciation.subtract(this.depreciationRate.multiply(new BigDecimal(years-1)));
-		depreciation = depreciation.pow((int) (years+1)); // years should not be too big for long
+		BigDecimal depreciation = BigDecimal.valueOf(1);
+		depreciation = depreciation.subtract(this.depreciationRate.multiply(BigDecimal.valueOf(2)));
+		depreciation = depreciation.pow((int) (years)); 
 		return orgPrice.multiply(depreciation);
 
 	}
