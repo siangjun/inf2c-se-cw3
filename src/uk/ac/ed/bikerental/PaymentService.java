@@ -7,5 +7,6 @@ public interface PaymentService {
 		public abstract String getData();
 	};
 	public boolean confirmPayment(PaymentData paymentData, BigDecimal price);
+	public boolean resolveDeposit(PaymentData paymentData, BigDecimal deposit);
 
 }

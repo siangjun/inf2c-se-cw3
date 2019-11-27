@@ -14,6 +14,9 @@ public class Provider {
 	private PricingPolicy pricingPolicy;
 
 	
+	public Provider(Location location, double depositRate) {
+		this(location, BigDecimal.valueOf(depositRate), new MockPricingPolicy());
+	}
 	public Provider(Location location, double depositRate, PricingPolicy policy) {
 		this(location, BigDecimal.valueOf(depositRate), policy);
 	}
