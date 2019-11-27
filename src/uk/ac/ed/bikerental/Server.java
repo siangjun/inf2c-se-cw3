@@ -116,7 +116,8 @@ public class Server {
 			// Delivered to the original provider
 			booking.resolveDeposit();
 			booking.freeBikes();
-		} else if (booking.getProvider().isPartnerWith(provider)) { // TODO: also awaiting delivery here?
+		} else if (booking.getProvider().isPartnerWith(provider)) { 
+			booking.setDeliveryState(DeliveryState.AwaitingReturn);
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
 					booking, 
 					provider.getLocation(), 

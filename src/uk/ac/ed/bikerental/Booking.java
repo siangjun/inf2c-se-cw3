@@ -55,6 +55,7 @@ public class Booking implements Deliverable{
 		quotes.forEach( (quote) -> {
 			quote.getBike().unlock(quote);
 		});
+		this.state = BookingState.Resolved;
 	}
 	
 	public void resolveDeposit() {
@@ -63,6 +64,10 @@ public class Booking implements Deliverable{
 		} else {
 			
 		}
+	}
+	public void bikesPickedUp() {
+		this.deliveryState = DeliveryState.None;
+		this.state = BookingState.WithCustomer;
 	}
 	
 	public void setDeliveryState(DeliveryState state) {
