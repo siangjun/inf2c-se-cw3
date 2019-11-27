@@ -35,4 +35,9 @@ public class MockPaymentService implements PaymentService {
 		return false;
 	}
 
+	@Override
+	public boolean resolveDeposit(PaymentData paymentData, BigDecimal deposit) {
+		return true;
+	}
+
 }

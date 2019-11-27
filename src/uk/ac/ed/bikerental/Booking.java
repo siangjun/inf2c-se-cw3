@@ -3,6 +3,8 @@ package uk.ac.ed.bikerental;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import uk.ac.ed.bikerental.PaymentService.PaymentData;
+
 enum DeliveryState{
 	None,
 	AwaitingDelivery,
@@ -26,6 +28,7 @@ public class Booking implements Deliverable{
 	private DeliveryState deliveryState;
 	private BookingState state;
 	private BigDecimal deposit;
+	private PaymentData paymentData;
 
 	
 	public Booking(Customer customer, Provider provider) {
@@ -40,8 +43,9 @@ public class Booking implements Deliverable{
 	/**
 	 * Call after the booking was paid
 	 * @param deposit the deposit amount that will be returned to the client
+	 * @param paymentData payment data to resolve the deposit
 	 */
-	public void setFinalised(BigDecimal deposit) {
+	public void setFinalised(BigDecimal deposit, PaymentData paymentData) {
 		this.state = BookingState.AwaitingCustomer;
 		this.deposit = deposit;
 	}
@@ -59,11 +63,7 @@ public class Booking implements Deliverable{
 	}
 	
 	public void resolveDeposit() {
-		if (deposit == null) {
-			
-		} else {
-			
-		}
+		PaymentServiceFactory.getPaymentService().resolveDeposit(this.paymentData, this.deposit);
 	}
 	public void bikesPickedUp() {
 		this.deliveryState = DeliveryState.None;
