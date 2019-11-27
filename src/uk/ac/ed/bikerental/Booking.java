@@ -17,6 +17,7 @@ enum BookingState{
 	AwaitingCustomer,
 	BeingDelivered,
 	WithCustomer,
+	WithPartner,
 	BeingReturned,
 	Resolved
 }
@@ -68,6 +69,9 @@ public class Booking implements Deliverable{
 	public void bikesPickedUp() {
 		this.deliveryState = DeliveryState.None;
 		this.state = BookingState.WithCustomer;
+	}
+	public void wasGivenToPartner(){
+		this.state = BookingState.WithPartner;
 	}
 	
 	public void setDeliveryState(DeliveryState state) {
