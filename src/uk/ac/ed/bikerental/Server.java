@@ -50,13 +50,13 @@ public class Server {
 		DateRange dateRange = quotes[0].getDateRange();
 		for (Quote q : quotes){
 			if (!q.getProvider().equals(prov)){
-				return true;
+				return false;
 			}
 			if (!q.getDateRange().equals(dateRange)){
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -79,10 +79,10 @@ public class Server {
 					throws BikesUnavailableException, PaymentRefusedException {
 		// Assuming that the bookQuote is called from inside the system
 		// If it were otherwise those asserts should be exceptions
-		assert(customer == null);
-		assert(quotes == null);
-		assert(paymentData == null);
-		assert(quotes.length == 0); // cannot book 0 quotes
+		assert(customer != null);
+		assert(quotes != null);
+		assert(paymentData != null);
+		assert(quotes.length > 0); // cannot book 0 quotes
 
 		assert(checkQuotes(quotes));
 

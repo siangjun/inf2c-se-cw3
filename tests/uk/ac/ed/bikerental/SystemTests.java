@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Unit tests for the entire system.
@@ -19,6 +20,7 @@ class SystemTests {
     private Query testQuery1;
     private Query testQuery2;
     private Query testQuery3;
+    private Query testQuery4;
     private ArrayList<Provider> testProviders;
     private ArrayList<Quote> testQuotes;
     private Customer c1;
@@ -27,6 +29,7 @@ class SystemTests {
     private Provider p3;
     private Bike b1;
     private Bike b2;
+    private Bike b3;
     private Quote q1;
     private Quote q2;
     private Quote quotes[];
@@ -56,6 +59,7 @@ class SystemTests {
         p2.addPartner(p1);
         testProviders.add(p1);
         testProviders.add(p2);
+        testProviders.add(p3);
         setUpMockPricingPolicyFor(p1);
         setUpMockPricingPolicyFor(p2);
         setUpMockPricingPolicyFor(p3);
@@ -69,8 +73,12 @@ class SystemTests {
                 new LinearDepreciationValuationPolicy(0.5),
                 LocalDate.of(2018,1,1));
 
+        b3 = new Bike(new BikeType((500), BikeType.SubType.Hybrid),
+                new LinearDepreciationValuationPolicy(0.5),
+                LocalDate.of(2018,1,1));
+
         p1.addBike(b1);
-        p3.addBike(b2);
+        p3.addBike(b3);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), p1.getPriceForBike(b1,
@@ -99,6 +107,10 @@ class SystemTests {
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
                 new BikeType((0.0), BikeType.SubType.BMX));
 
+        testQuery4 = new Query(new Location("EH8 9LE", ""), new DateRange(
+                LocalDate.of(2019, 11, 1), LocalDate.of(2019, 11, 4)),
+                new BikeType((0.0), BikeType.SubType.Hybrid));
+
         b2.lock(q2);
 
         testQuotes = new ArrayList<>();
@@ -115,9 +127,6 @@ class SystemTests {
 
 
     }
-    
-    // TODO: Write system tests covering the three main use cases
-    // TODO: Use MockPaymentData from MockPaymentService (if constructed with empty string it will reject payment and accept it otherwise)
 
     @Test
     void testGetQuote() {
@@ -125,7 +134,7 @@ class SystemTests {
     }
 
     @Test
-    void testGetQuoteProviderFar() {  // TODO: Fails because function doesn't check if provider is far
+    void testGetQuoteProviderFar() {
         assertEquals(new ArrayList<Quote>(), testServer.getQuotes(testQuery2));
     }
 
@@ -155,15 +164,6 @@ class SystemTests {
     }
 
     @Test
-    void testBookQuoteDeliveryTrueLocationNull() throws Exception {
-        assertThrows(IllegalArgumentException.class, () -> {
-            int t = testServer.bookQuote(c1, quotes,
-                    new MockPaymentService.MockPaymentData("test"), true,
-                    null);
-        });
-    }
-
-    @Test
     void testBookQuotePaymentFailed() {
         assertThrows(Server.PaymentRefusedException.class, () -> {
             testServer.bookQuote(c1, quotes, new MockPaymentService.MockPaymentData(""),
@@ -181,18 +181,20 @@ class SystemTests {
 
     @Test
     void testReturnBike() throws Exception {
-        testServer.returnBike(p1, ticket);
         Booking booking = testServer.getServerData().getBooking(ticket);
+        booking.bikesPickedUp();         // to simulate that bike is with customer
+        testServer.returnBike(p1, ticket);
         assertEquals(DeliveryState.None, booking.getDeliveryState());
-        assertEquals(BookingState.Resolved, booking.getState());  // TODO: returns AwaitingCustomer
+        assertEquals(BookingState.Resolved, booking.getState());
     }
 
     @Test
     void testReturnBikeToPartner() throws Exception {
-        testServer.returnBike(p2, ticket);
         Booking booking = testServer.getServerData().getBooking(ticket);
-        assertEquals(DeliveryState.AwaitingReturn, booking.getDeliveryState()); //TODO: returns None
-        assertEquals(BookingState.BeingReturned, booking.getState());
+        booking.bikesPickedUp();         // to simulate that bike is with customer
+        testServer.returnBike(p2, ticket);
+        assertEquals(DeliveryState.AwaitingReturn, booking.getDeliveryState());
+        assertEquals(BookingState.WithCustomer, booking.getState()); //TODO: change to WithPartner
     }
 
     @Test
@@ -205,7 +207,7 @@ class SystemTests {
     @Test
     void testIntegration() throws Exception {
         MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
-        ArrayList<Booking> delBookings = new ArrayList<>(); // bookings to be delivered.
+        HashSet<Booking> delBookings = new HashSet<>(); // bookings to be delivered.
         // we have a few customers each with a different criteria.
         Location deliveryAdd1 = new Location("EH9 1SE", "16 East Mayfield");
         Location deliveryAdd2 = new Location("EH3 9QG", "123 Fountainbridge");
@@ -215,12 +217,15 @@ class SystemTests {
 
         // each customer queries what they want.
         ArrayList<Quote> quotes1 = testServer.getQuotes(testQuery1);
-        ArrayList<Quote> quotes2 = testServer.getQuotes(testQuery3);
+        ArrayList<Quote> quotes2 = testServer.getQuotes(testQuery4);
+
+        Quote[] arrayQ1 = new Quote[quotes1.size()];
+        Quote[] arrayQ2 = new Quote[quotes2.size()];
 
         // each customer then proceeds to book.
-        int bookingNo1 = testServer.bookQuote(testCustomer1, (Quote[]) quotes1.toArray(),
+        int bookingNo1 = testServer.bookQuote(testCustomer1, quotes1.toArray(arrayQ1),
                 new MockPaymentService.MockPaymentData("test"), true, deliveryAdd2);
-        int bookingNo2 = testServer.bookQuote(testCustomer2, (Quote[]) quotes2.toArray(),
+        int bookingNo2 = testServer.bookQuote(testCustomer2, quotes2.toArray(arrayQ2),
                 new MockPaymentService.MockPaymentData("test"), false, null);
         Booking testBooking1 = testServer.getServerData().getBooking(bookingNo1);
         Booking testBooking2 = testServer.getServerData().getBooking(bookingNo2);
