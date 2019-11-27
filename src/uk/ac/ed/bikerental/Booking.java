@@ -99,4 +99,12 @@ public class Booking implements Deliverable{
 			this.freeBikes();
 		}
 	}
+
+	public DeliveryState getDeliveryState() {
+		return this.deliveryState;
+	}
+
+	public BookingState getState() {
+		return this.state;
+	}
 }

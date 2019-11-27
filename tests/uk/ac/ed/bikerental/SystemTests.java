@@ -20,12 +20,16 @@ class SystemTests {
     private ArrayList<Provider> testProviders;
     private ArrayList<Quote> testQuotes;
     private Customer c1;
+    private Provider p1;
+    private Provider p2;
     private Bike b1;
     private Bike b2;
     private Quote q1;
     private Quote q2;
     private Quote quotes[];
     private Quote lockedQuotes[];
+    private Booking book1;
+    private int ticket;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -33,9 +37,9 @@ class SystemTests {
         DeliveryServiceFactory.setupMockDeliveryService();
         PaymentServiceFactory.setupMockPaymentService();
         testProviders = new ArrayList<>();
-        Provider p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 0.5);
+        p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 0.5);
 
-        Provider p2 = new Provider(new Location("EH8 9LE", "11 Crichton Street"), 0.5);
+        p2 = new Provider(new Location("EH8 9LE", "11 Crichton Street"), 0.5);
         p1.addPartner(p2);
         p2.addPartner(p1);
         testProviders.add(p1);
@@ -82,6 +86,12 @@ class SystemTests {
         lockedQuotes = new Quote[1];
         lockedQuotes[0] = q2;
 
+        book1 = new Booking(c1,p1);
+        book1.addQuote(q1);
+        ticket = testServer.getServerData().addBooking(book1);
+
+
+
     }
     
     // TODO: Write system tests covering the three main use cases
@@ -104,16 +114,22 @@ class SystemTests {
 
     @Test
     void testBookQuote() throws Exception {
-        assertEquals(/*TODO: what object?*/ 0 ,testServer.bookQuote(c1, quotes,
-                new MockPaymentService.MockPaymentData("test"), false, null));
+        int t = testServer.bookQuote(c1, quotes,
+                new MockPaymentService.MockPaymentData("test"), false, null);
+        Booking booking = testServer.getServerData().getBooking(t);
+        assertEquals(DeliveryState.None, booking.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, booking.getState());
 
     }
 
     @Test
     void testBookQuoteDeliveryTrue() throws Exception {
-        assertEquals(/*TODO: what object?*/ 0,testServer.bookQuote(c1, quotes,
+        int t = testServer.bookQuote(c1, quotes,
                 new MockPaymentService.MockPaymentData("test"), true,
-                new Location("EH9 1SE", "")));
+                new Location("EH9 1SE", "16 East Mayfield"));
+        Booking booking = testServer.getServerData().getBooking(t);
+        assertEquals(DeliveryState.AwaitingDelivery, booking.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, booking.getState());
     }
 
     @Test
@@ -133,8 +149,11 @@ class SystemTests {
     }
 
     @Test
-    void testReturnBike() {
-        testServer.getServerData().getBooking(1);
+    void testReturnBike() throws Exception {
+        //TODO:
+        testServer.returnBike(p1, ticket);
+        Booking booking = testServer.getServerData().getBooking(ticket);
+        assertEquals(DeliveryState.AwaitingDelivery, booking.getDeliveryState());
     }
 
     @Test

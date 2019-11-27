@@ -51,7 +51,7 @@ public class Server {
 	 * @param paymentData details of payment
 	 * @param wantsDelivery boolean on whether the customer wants delivery
 	 * @param location location to deliver to
-	 * @return // TODO: expected to return an object representing the details of the booking, including a unique booking number
+	 * @return the unique booking number
 	 * @throws BikesUnavailableException if the bike in the quote is unavailable.
 	 * @throws PaymentRefusedException if the payment fails.
 	 */
@@ -116,7 +116,7 @@ public class Server {
 			// Delivered to the original provider
 			booking.resolveDeposit();
 			booking.freeBikes();
-		} else if (booking.getProvider().isPartnerWith(provider)) {
+		} else if (booking.getProvider().isPartnerWith(provider)) { // TODO: also awaiting delivery here?
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
 					booking, 
 					provider.getLocation(), 
