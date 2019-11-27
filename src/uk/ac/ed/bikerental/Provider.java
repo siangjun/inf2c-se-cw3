@@ -52,6 +52,9 @@ public class Provider {
 	public void addBike(Bike bike) {
 		this.bikes.add(bike);
 	}
+	public PricingPolicy getPricingPolicy(){
+		return this.pricingPolicy;
+	}
 
 	public boolean isPartnerWith(Provider provider) {
 		return partners.stream().anyMatch((prov) -> {
