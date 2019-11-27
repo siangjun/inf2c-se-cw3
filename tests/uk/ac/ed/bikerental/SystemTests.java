@@ -194,7 +194,7 @@ class SystemTests {
         booking.bikesPickedUp();         // to simulate that bike is with customer
         testServer.returnBike(p2, ticket);
         assertEquals(DeliveryState.AwaitingReturn, booking.getDeliveryState());
-        assertEquals(BookingState.WithCustomer, booking.getState()); //TODO: change to WithPartner
+        assertEquals(BookingState.WithPartner, booking.getState());
     }
 
     @Test
