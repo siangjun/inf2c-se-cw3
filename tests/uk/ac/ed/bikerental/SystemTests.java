@@ -56,6 +56,9 @@ class SystemTests {
         p2.addPartner(p1);
         testProviders.add(p1);
         testProviders.add(p2);
+        setUpMockPricingPolicyFor(p1);
+        setUpMockPricingPolicyFor(p2);
+        setUpMockPricingPolicyFor(p3);
 
         c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
 
