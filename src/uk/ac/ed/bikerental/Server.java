@@ -29,7 +29,7 @@ public class Server {
 			provider.getBikes().forEach((bike) -> {
 				if (!bike.isTaken(query.getDateRange()))
 					if (matchesQuery(query, bike)) {
-						BigDecimal bikePrice = bike.getValue();
+						BigDecimal bikePrice = bike.getValue(); //TODO: fix this
 						BigDecimal deposit = bikePrice.multiply(provider.getDepositRate());
 
 						availableQuotes.add(

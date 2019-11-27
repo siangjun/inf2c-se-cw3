@@ -155,14 +155,14 @@ class SystemTests {
         testServer.returnBike(p1, ticket);
         Booking booking = testServer.getServerData().getBooking(ticket);
         assertEquals(DeliveryState.None, booking.getDeliveryState());
-        assertEquals(BookingState.BeingReturned, booking.getState());
+        assertEquals(BookingState.Resolved, booking.getState());  // TODO: returns AwaitingCustomer
     }
 
     @Test
     void testReturnBikeToPartner() throws Exception {
         testServer.returnBike(p2, ticket);
         Booking booking = testServer.getServerData().getBooking(ticket);
-        assertEquals(DeliveryState.AwaitingDelivery, booking.getDeliveryState());
+        assertEquals(DeliveryState.AwaitingReturn, booking.getDeliveryState()); //TODO: returns None
         assertEquals(BookingState.BeingReturned, booking.getState());
     }
 
