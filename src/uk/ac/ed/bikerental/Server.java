@@ -118,7 +118,7 @@ public class Server {
 			throw new PaymentRefusedException();
 		}
 		
-		booking.setFinalised(price.multiply(depositRate));
+		booking.setFinalised(price.multiply(depositRate), paymentData);
 		
 		if (wantsDelivery) {
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
