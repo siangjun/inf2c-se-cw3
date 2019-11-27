@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MockPricingPolicy implements PricingPolicy{
-	Map<BikeType, BigDecimal> dailyPrices;
+	Map<BikeType.SubType, BigDecimal> dailyPrices;
 	public MockPricingPolicy(){
-		this.dailyPrices = new HashMap<BikeType, BigDecimal>();
+		this.dailyPrices = new HashMap<BikeType.SubType, BigDecimal>();
 	}
 
 	@Override
 	public void setDailyRentalPrice(BikeType bikeType, BigDecimal dailyPrice) {
-		dailyPrices.put(bikeType, dailyPrice);
+		dailyPrices.put(bikeType.getSubType(), dailyPrice);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class MockPricingPolicy implements PricingPolicy{
 		
 		for (Bike b: bikes){
 			price = price
-				.add(dailyPrices.get(b.getType()).multiply(days));
+				.add(dailyPrices.get(b.getType().getSubType()).multiply(days));
 		}
 		return price;
 	}
