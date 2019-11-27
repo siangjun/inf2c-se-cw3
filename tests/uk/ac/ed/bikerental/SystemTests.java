@@ -22,6 +22,7 @@ class SystemTests {
     private Customer c1;
     private Provider p1;
     private Provider p2;
+    private Provider p3;
     private Bike b1;
     private Bike b2;
     private Quote q1;
@@ -40,6 +41,7 @@ class SystemTests {
         p1 = new Provider(new Location("EH3 9QG", "123 Fountainbridge"), 0.5);
 
         p2 = new Provider(new Location("EH8 9LE", "11 Crichton Street"), 0.5);
+        p3 = new Provider(new Location("EH8 9LE", "10 Crichton Street"), 0.5);
         p1.addPartner(p2);
         p2.addPartner(p1);
         testProviders.add(p1);
@@ -150,10 +152,25 @@ class SystemTests {
 
     @Test
     void testReturnBike() throws Exception {
-        //TODO:
         testServer.returnBike(p1, ticket);
         Booking booking = testServer.getServerData().getBooking(ticket);
+        assertEquals(DeliveryState.None, booking.getDeliveryState());
+        assertEquals(BookingState.BeingReturned, booking.getState());
+    }
+
+    @Test
+    void testReturnBikeToPartner() throws Exception {
+        testServer.returnBike(p2, ticket);
+        Booking booking = testServer.getServerData().getBooking(ticket);
         assertEquals(DeliveryState.AwaitingDelivery, booking.getDeliveryState());
+        assertEquals(BookingState.BeingReturned, booking.getState());
+    }
+
+    @Test
+    void testReturnBikeNotPartner() {
+        assertThrows(Server.ProviderIsNotAPartnerException.class, () -> {
+            testServer.returnBike(p3, ticket);
+        });
     }
 
     @Test
