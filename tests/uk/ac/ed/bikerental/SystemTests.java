@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -49,20 +50,27 @@ class SystemTests {
 
         c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
 
-        b1 = new Bike(new BikeType((5.0), BikeType.SubType.Mountain),
-                new LinearDepreciationValuationPolicy(0.5)); //TODO: change so that we're not using extended submodules
-        b2 = new Bike(new BikeType((5.0), BikeType.SubType.BMX),
-                new LinearDepreciationValuationPolicy(0.5));
+        b1 = new Bike(new BikeType((500), BikeType.SubType.Mountain),
+                new LinearDepreciationValuationPolicy(0.5),
+                LocalDate.of(2015,1,1)); //TODO: change so that we're not using extended submodules
+        b2 = new Bike(new BikeType((500), BikeType.SubType.BMX),
+                new LinearDepreciationValuationPolicy(0.5),
+                LocalDate.of(2018,1,1));
 
         p1.addBike(b1);
+        p3.addBike(b2);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019,11,4)), b1.getValue(),
-                b1.getValue().multiply(p1.getDepositRate()));
+                LocalDate.of(2019,11,4)), p1.getPriceForBike(b1,
+                new DateRange(LocalDate.of(2019, 11, 1),
+                        LocalDate.of(2019,11,4))),
+                b1.getValue());
 
         q2 = new Quote(b2, p1, new DateRange(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019,11,4)), b2.getValue(),
-                b2.getValue().multiply(p1.getDepositRate()));
+                LocalDate.of(2019,11,4)), p1.getPriceForBike(b2,
+                new DateRange(LocalDate.of(2019, 11, 1),
+                        LocalDate.of(2019,11,4))),
+                b2.getValue());
 
         testServer = new Server(new MockServerData(testProviders));
 
@@ -135,6 +143,15 @@ class SystemTests {
     }
 
     @Test
+    void testBookQuoteDeliveryTrueLocationNull() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> {
+            int t = testServer.bookQuote(c1, quotes,
+                    new MockPaymentService.MockPaymentData("test"), true,
+                    null);
+        });
+    }
+
+    @Test
     void testBookQuotePaymentFailed() {
         assertThrows(Server.PaymentRefusedException.class, () -> {
             testServer.bookQuote(c1, quotes, new MockPaymentService.MockPaymentData(""),
@@ -174,7 +191,53 @@ class SystemTests {
     }
 
     @Test
-    void testIntegration() {
-        // TODO: Run a full simulation test of a successful run
+    void testIntegration() throws Exception {
+        MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
+        ArrayList<Booking> delBookings = new ArrayList<>(); // bookings to be delivered.
+        // we have a few customers each with a different criteria.
+        Location deliveryAdd1 = new Location("EH9 1SE", "16 East Mayfield");
+        Location deliveryAdd2 = new Location("EH3 9QG", "123 Fountainbridge");
+        Customer testCustomer1 = new Customer(deliveryAdd1);
+        Customer testCustomer2 = new Customer(deliveryAdd2);
+
+        // each customer queries what they want.
+        ArrayList<Quote> quotes1 = testServer.getQuotes(testQuery1);
+        ArrayList<Quote> quotes2 = testServer.getQuotes(testQuery3);
+
+        // each customer then proceeds to book.
+        int bookingNo1 = testServer.bookQuote(testCustomer1, (Quote[]) quotes1.toArray(),
+                new MockPaymentService.MockPaymentData("test"), true, deliveryAdd2);
+        int bookingNo2 = testServer.bookQuote(testCustomer2, (Quote[]) quotes2.toArray(),
+                new MockPaymentService.MockPaymentData("test"), false, null);
+        Booking testBooking1 = testServer.getServerData().getBooking(bookingNo1);
+        Booking testBooking2 = testServer.getServerData().getBooking(bookingNo2);
+
+        // test the statuses of the bookings
+        assertEquals(DeliveryState.AwaitingDelivery, testBooking1.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, testBooking1.getState());
+        assertEquals(DeliveryState.None, testBooking2.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, testBooking2.getState());
+
+        // delivery of the bike
+        delBookings.add(testBooking1);
+        assertEquals(delBookings, deliveryService.getPickupsOn(LocalDate.of(2019,11,1)));
+        deliveryService.carryOutPickups(LocalDate.of(2019,11,1));
+        assertEquals(DeliveryState.BeingTransported, testBooking1.getDeliveryState());
+        deliveryService.carryOutDropoffs();
+
+        // bikes with customers
+        assertEquals(DeliveryState.None, testBooking1.getDeliveryState());
+        assertEquals(BookingState.WithCustomer, testBooking1.getState());
+        testBooking2.bikesPickedUp();
+        assertEquals(DeliveryState.None, testBooking2.getDeliveryState());
+        assertEquals(BookingState.WithCustomer, testBooking2.getState());
+
+        // bikes being returned
+        testServer.returnBike(p1, bookingNo1);
+        testServer.returnBike(p3, bookingNo2);
+        assertEquals(DeliveryState.None, testBooking1.getDeliveryState());
+        assertEquals(BookingState.Resolved, testBooking1.getState());
+        assertEquals(DeliveryState.None, testBooking2.getDeliveryState());
+        assertEquals(BookingState.Resolved, testBooking2.getState());
     }
 }
