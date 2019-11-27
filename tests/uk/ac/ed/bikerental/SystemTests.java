@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -32,6 +33,14 @@ class SystemTests {
     private Quote lockedQuotes[];
     private Booking book1;
     private int ticket;
+				
+	private static void setUpMockPricingPolicyFor(Provider prov){
+		PricingPolicy policy = prov.getPricingPolicy();
+		for (BikeType.SubType type: BikeType.SubType.values()){
+			policy.setDailyRentalPrice(new BikeType(0.0, type), new BigDecimal(100));
+		}
+	}
+			
 
     @BeforeEach
     void setUp() throws Exception {
