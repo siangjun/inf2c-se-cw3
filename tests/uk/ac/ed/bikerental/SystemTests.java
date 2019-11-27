@@ -125,7 +125,7 @@ class SystemTests {
     }
 
     @Test
-    void testGetQuoteProviderFar() {  // TODO: Fails because function doesn't check if provider is far
+    void testGetQuoteProviderFar() { 
         assertEquals(new ArrayList<Quote>(), testServer.getQuotes(testQuery2));
     }
 

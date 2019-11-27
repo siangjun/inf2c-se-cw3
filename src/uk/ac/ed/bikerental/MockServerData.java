@@ -12,7 +12,6 @@ public class MockServerData implements ServerDataInterface{
 	public MockServerData(ArrayList<Provider> providers) {
 		this.providers = providers;
 		bookings = new HashMap<Integer, Booking>();
-		// TODO: Implement this method
 	}
 
 	public Integer addBooking(Booking booking) {

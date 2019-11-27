@@ -1,6 +1,3 @@
-Maybe: 
-	Make bike just DateRange whan locking
-
 The bike can have multiple booking at the same time for different DateRanges, the code will reflect that, but the 
 	design pattern needs to reflect that
 	Bike is not holding bookings for themselves, they are instead holding the date ranges for which they are taken

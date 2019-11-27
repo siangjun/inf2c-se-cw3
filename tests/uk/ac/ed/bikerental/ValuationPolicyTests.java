@@ -36,12 +36,12 @@ class ValuationPolicyTests {
     }
 
     @Test
-    void testLinearDepreciationValuationDoubleConv() {  // TODO: Something wrong with converting double to BigDecimal
+    void testLinearDepreciationValuationDoubleConv() {  
         assertEquals(BigDecimal.valueOf(300.00).stripTrailingZeros(), b2.getValue().stripTrailingZeros());
     }
 
     @Test
-    void testDoubleDecliningBalanceDepreciationValuation() { // TODO: Calculation is wrong
+    void testDoubleDecliningBalanceDepreciationValuation() { 
         assertEquals(BigDecimal.valueOf(204.80).stripTrailingZeros(), b3.getValue().stripTrailingZeros());
     }
 
