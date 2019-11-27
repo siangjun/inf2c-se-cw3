@@ -2,6 +2,7 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,16 +11,18 @@ public class Provider {
 	private Set<Provider> partners;
 	private final Location location;
 	private BigDecimal depositRate;
+	private PricingPolicy pricingPolicy;
 
 	
-	public Provider(Location location, double depositRate) {
-		this(location, new BigDecimal(depositRate));
+	public Provider(Location location, double depositRate, PricingPolicy policy) {
+		this(location, BigDecimal.valueOf(depositRate), policy);
 	}
-	public Provider(Location location, BigDecimal depositRate){
+	public Provider(Location location, BigDecimal depositRate, PricingPolicy pricingPolicy){
 		this.partners = new HashSet<Provider>();
 		this.bikes = new ArrayList<Bike>(); 
 		this.depositRate = depositRate;
 		this.location = location;
+		this.pricingPolicy = pricingPolicy;
 	}
 	
 	public void addPartner(Provider provider) {
@@ -28,6 +31,10 @@ public class Provider {
 	
 	public void removePartner(Provider provider) {
 		this.partners.remove(provider);
+	}
+	
+	public BigDecimal getPriceForBike(Bike bike, DateRange duration) {
+		return pricingPolicy.calculatePrice(Arrays.asList(bike), duration);
 	}
 	
 	public Location getLocation() {

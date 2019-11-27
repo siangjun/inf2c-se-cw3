@@ -25,22 +25,38 @@ public class Server {
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
 		serverData.getProviders().forEach((provider) -> {
-			// TODO: check if provider is near query location
-			provider.getBikes().forEach((bike) -> {
-				if (!bike.isTaken(query.getDateRange()))
-					if (matchesQuery(query, bike)) {
-						BigDecimal bikePrice = bike.getValue(); //TODO: fix this
-						BigDecimal deposit = bikePrice.multiply(provider.getDepositRate());
+			if (provider.getLocation().isNearTo(query.getLocation())){
+				provider.getBikes().forEach((bike) -> {
+					if (!bike.isTaken(query.getDateRange())){
+						if (matchesQuery(query, bike)) {
+							BigDecimal bikePrice = provider.getPriceForBike(bike, query.getDateRange()); 
+							BigDecimal deposit = bike.getValue();
 
-						availableQuotes.add(
-								new Quote(bike, provider, query.getDateRange(),
-										bikePrice, 
-										deposit));
+							availableQuotes.add(
+									new Quote(bike, provider, query.getDateRange(),
+											bikePrice, 
+											deposit));
+						}
 					}
-			});
+				});
+			}
 		});
 		
 		return availableQuotes;
+	}
+
+	private static boolean checkQuotes(Quote[] quotes){
+		Provider prov = quotes[0].getProvider();
+		DateRange dateRange = quotes[0].getDateRange();
+		for (Quote q : quotes){
+			if (!q.getProvider().equals(prov)){
+				return true;
+			}
+			if (!q.getDateRange().equals(dateRange)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -50,7 +66,7 @@ public class Server {
 	 * @param quotes an array of quotes to book
 	 * @param paymentData details of payment
 	 * @param wantsDelivery boolean on whether the customer wants delivery
-	 * @param location location to deliver to
+	 * @param location location to deliver to if null and customer wants delivery it will be taken from the customer data
 	 * @return the unique booking number
 	 * @throws BikesUnavailableException if the bike in the quote is unavailable.
 	 * @throws PaymentRefusedException if the payment fails.
@@ -59,14 +75,21 @@ public class Server {
 			Quote[] quotes,
 			PaymentService.PaymentData paymentData,
 			boolean wantsDelivery,
-			Location location) // Can be null if the wantsDelivery is false TODO: Location can be fetched from customer?
+			Location location) 
 					throws BikesUnavailableException, PaymentRefusedException {
-		/* TODO
-		 * check whether the provider is unique
-		 * check if the date is the same for all bikes
-		 * check if there is at least one quote
-		 * NULL? idk if we should do it
-		 */
+		// Assuming that the bookQuote is called from inside the system
+		// If it were otherwise those asserts should be exceptions
+		assert(customer == null);
+		assert(quotes == null);
+		assert(paymentData == null);
+		assert(quotes.length == 0); // cannot book 0 quotes
+
+		assert(checkQuotes(quotes));
+
+
+		if (location == null) {
+			location = customer.getLocation();
+		}
 		DateRange dateRange = quotes[0].getDateRange();
 		Provider provider = quotes[0].getProvider();
 		Booking booking = new Booking(customer, provider);
@@ -87,7 +110,7 @@ public class Server {
 
 		if (!succ) {
 			booking.freeBikes();
-			throw new BikesUnavailableException();
+			throw new BikesUnavailableException(); // throws for things we have no control over
 		}
 		if (!PaymentServiceFactory.getPaymentService().
 				confirmPayment(paymentData, price.add(price.multiply(depositRate)))) {
