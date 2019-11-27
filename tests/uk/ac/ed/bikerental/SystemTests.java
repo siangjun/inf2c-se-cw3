@@ -56,6 +56,9 @@ class SystemTests {
         p2.addPartner(p1);
         testProviders.add(p1);
         testProviders.add(p2);
+        setUpMockPricingPolicyFor(p1);
+        setUpMockPricingPolicyFor(p2);
+        setUpMockPricingPolicyFor(p3);
 
         c1 = new Customer(new Location("EH9 1SE", "16 East Mayfield"));
 
@@ -208,6 +211,7 @@ class SystemTests {
         Location deliveryAdd2 = new Location("EH3 9QG", "123 Fountainbridge");
         Customer testCustomer1 = new Customer(deliveryAdd1);
         Customer testCustomer2 = new Customer(deliveryAdd2);
+        Customer testCustomer3 = new Customer(deliveryAdd1);
 
         // each customer queries what they want.
         ArrayList<Quote> quotes1 = testServer.getQuotes(testQuery1);
