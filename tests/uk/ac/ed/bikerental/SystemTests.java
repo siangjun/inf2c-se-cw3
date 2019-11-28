@@ -3,7 +3,6 @@ package uk.ac.ed.bikerental;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,9 +32,11 @@ class SystemTests {
     private Bike b2;
     private Bike b3;
     private Bike b4;
+    private Bike bNotOwnedByProvider;
     private Quote q1;
     private Quote q2;
-    private Quote invalidQuote;
+    private Quote invalidQuote1;
+    private Quote invalidQuote2;
     private Quote quotes[];
     private Quote lockedQuotes[];
     private Quote invalidQuotes[];
@@ -74,7 +75,7 @@ class SystemTests {
 
         b1 = new Bike(new BikeType((500), BikeType.SubType.Mountain),
                 new MockValuationPolicy(),
-                LocalDate.of(2015,1,1)); //TODO: change so that we're not using extended submodules
+                LocalDate.of(2015,1,1));
         b2 = new Bike(new BikeType((500), BikeType.SubType.BMX),
                 new MockValuationPolicy(),
                 LocalDate.of(2018,1,1));
@@ -85,6 +86,9 @@ class SystemTests {
         b4 = new Bike(new BikeType((500), BikeType.SubType.Street),
                 new MockValuationPolicy(),
                 LocalDate.of(2018,1,1));
+        bNotOwnedByProvider = new Bike(new BikeType((500), BikeType.SubType.Mountain),
+                            new MockValuationPolicy(),
+                            LocalDate.of(2015,1,1));
 
         p1.addBike(b1);
         p1.addBike(b4);
@@ -102,8 +106,14 @@ class SystemTests {
                         LocalDate.of(2019,11,4))),
                 b2.getValue());
 
-        invalidQuote = new Quote(b1, pNotInSystem, new DateRange(LocalDate.of(2019, 11, 1),
+        invalidQuote1 = new Quote(b1, pNotInSystem, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), pNotInSystem.getPriceForBike(b1,
+                new DateRange(LocalDate.of(2019, 11, 1),
+                        LocalDate.of(2019,11,4))),
+                b1.getValue());
+
+        invalidQuote2 = new Quote(bNotOwnedByProvider, p1, new DateRange(LocalDate.of(2019, 11, 1),
+                LocalDate.of(2019,11,4)), p1.getPriceForBike(bNotOwnedByProvider,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
                 b1.getValue());
@@ -140,7 +150,6 @@ class SystemTests {
         lockedQuotes = new Quote[1];
         lockedQuotes[0] = q2;
         invalidQuotes = new Quote[1];
-        invalidQuotes[0] = invalidQuote;
 
         book1 = new Booking(c1,p1);
         book1.addQuote(q1);
@@ -243,10 +252,21 @@ class SystemTests {
     }
 
     @Test
-    void testBookQuoteInvalidQuote() {
+    void testBookQuoteInvalidQuoteInvalidProvider() {
+        invalidQuotes[0] = invalidQuote1;
 	    assertThrows(NullPointerException.class, () -> {
 	        //TODO: or maybe InvalidQuoteException?, need to check if provider is actually in system.
 	        testServer.bookQuote(c1, invalidQuotes, new MockPaymentService.MockPaymentData("test"),
+                    false, null);
+        });
+    }
+
+    @Test
+    void testBookQuoteInvalidQuoteBikeNotOwnedByProvider() {
+        invalidQuotes[0] = invalidQuote2;
+        assertThrows(NullPointerException.class, () -> {
+            //TODO: or maybe InvalidQuoteException?, need to check if provider actually owns bike.
+            testServer.bookQuote(c1, invalidQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
         });
     }

@@ -1,10 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Provider {
 	private ArrayList<Bike> bikes;
@@ -37,7 +34,7 @@ public class Provider {
 	}
 	
 	public BigDecimal getPriceForBike(Bike bike, DateRange duration) {
-		return pricingPolicy.calculatePrice(Arrays.asList(bike), duration);
+		return pricingPolicy.calculatePrice(Collections.singletonList(bike), duration);
 	}
 	
 	public Location getLocation() {
