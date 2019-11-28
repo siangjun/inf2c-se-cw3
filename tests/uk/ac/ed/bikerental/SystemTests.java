@@ -92,6 +92,7 @@ class SystemTests {
 
         p1.addBike(b1);
         p1.addBike(b4);
+        p2.addBike(b2);
         p3.addBike(b3);
 
         q1 = new Quote(b1, p1, new DateRange(LocalDate.of(2019, 11, 1),
@@ -100,8 +101,8 @@ class SystemTests {
                         LocalDate.of(2019,11,4))),
                 b1.getValue());
 
-        q2 = new Quote(b2, p1, new DateRange(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019,11,4)), p1.getPriceForBike(b2,
+        q2 = new Quote(b2, p2, new DateRange(LocalDate.of(2019, 11, 1),
+                LocalDate.of(2019,11,4)), p2.getPriceForBike(b2,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
                 b2.getValue());
@@ -222,7 +223,6 @@ class SystemTests {
 
     @Test
     void testBookQuoteBikeUnavailable() {
-    	// TODO: The customer tries to book a bike from wrong provider
         assertThrows(Server.BikesUnavailableException.class, () -> {
             testServer.bookQuote(c1, lockedQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);

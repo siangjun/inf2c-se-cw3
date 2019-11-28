@@ -6,7 +6,12 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 /**
- * DateRange
+ * DateRange is the class that represents a specific time period.
+ * It is represented by:
+ * <ul>
+ *     <li>start</li>
+ *     <li>end</li>
+ * </ul>
  */
 public class DateRange {
 	// No reason for this to not be final
@@ -108,7 +113,11 @@ public class DateRange {
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
 
-
+    /**
+     * Extends the range by the same number of days to the left, and to the right.
+     * @param days The amount of days to change.
+     * @return A new DateRange with the appropriate range.
+     */
 	public DateRange createExtendedRange(int days) {
 		return new DateRange(start.minusDays(days), end.plusDays(days));
 	}
