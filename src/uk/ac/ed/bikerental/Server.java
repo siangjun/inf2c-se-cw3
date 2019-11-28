@@ -145,8 +145,8 @@ public class Server {
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
 					booking, 
 					provider.getLocation(), 
-					booking.getProvider().getLocation(), 
-					LocalDate.now());
+					booking.getProvider().getLocation(),
+					LocalDate.now());   // TODO: is it possible to change it such that it gets the return date?
 			// The Booking will resolve itself when it is delivered
 		} else {
 			throw new ProviderIsNotAPartnerException();
