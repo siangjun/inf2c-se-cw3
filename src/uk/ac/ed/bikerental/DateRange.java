@@ -5,6 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
+/**
+ * DateRange
+ */
 public class DateRange {
 	// No reason for this to not be final
     private final LocalDate start, end;
@@ -27,7 +30,7 @@ public class DateRange {
     
     /**
      * Gets the start date
-     * @returns start date
+     * @return start date
      */
     public LocalDate getStart() {
         return this.start;
@@ -35,7 +38,7 @@ public class DateRange {
     
     /**
      * Gets the end date
-     * @returns end date
+     * @return end date
      */
     public LocalDate getEnd() {
         return this.end;
@@ -63,7 +66,7 @@ public class DateRange {
      * as a parameter.
      *
      * @param other an object {@link DateRange}
-     * @return      <code>true</code> if overlap found, <code>false</code> otherwise.
+     * @return <code>true</code> if overlap found, <code>false</code> otherwise.
      * @throws IllegalArgumentException If other is null
      */
     public Boolean overlaps(DateRange other) {
@@ -79,22 +82,24 @@ public class DateRange {
 		}
     }
 
-    @Override
+
     /**
      * Overrides hashCode so the DateRange can be used in collections
-     * @returns hash of the object
+     * @return hash of the object
      */
+    @Override
     public int hashCode() {
         // hashCode method allowing use in collections
         return Objects.hash(end, start);
     }
 
-    @Override
+
     /**
      * Overrides object equals method so it is possible to check whether one {@link DateRange} equals another
-     * @param any object, especially {@link DateRange} object
-     * @returns <code>boolean</code> whether the objects are equal
+     * @param obj especially {@link DateRange} object
+     * @return <code>boolean</code> whether the objects are equal
      */
+    @Override
     public boolean equals(Object obj) {
         // equals method for testing equality in tests
         if (this == obj)
@@ -107,7 +112,6 @@ public class DateRange {
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
 
-    // You can add your own methods here
 
 	public DateRange createExtendedRange(int days) {
 		return new DateRange(start.minusDays(days), end.plusDays(days));
