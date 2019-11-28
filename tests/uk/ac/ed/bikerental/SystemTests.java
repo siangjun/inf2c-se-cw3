@@ -307,6 +307,16 @@ class SystemTests {
     }
 
     @Test
+    void testReturnBikeProviderNotInSystem() {
+        assert(false);
+	    /* TODO: remove comments once implemented in system.
+	    assertThrows(Server.ProviderNotInSystem.class, () -> {
+	        testServer.returnBike(pNotInSystem, ticket);
+	    });
+	     */
+    }
+
+    @Test
     void testIntegration() throws Exception {
         MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
         //list of bookings to be delivered on a certain day, for testing purposes.

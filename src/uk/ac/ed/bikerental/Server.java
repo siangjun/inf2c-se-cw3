@@ -79,6 +79,7 @@ public class Server {
 					throws BikesUnavailableException, PaymentRefusedException {
 		// Assuming that the bookQuote is called from inside the system
 		// If it were otherwise those asserts should be exceptions
+		// TODO: what if the quotes have illegal parameters? (provider not in system, bike not own by provider etc.)
 		assert(customer != null);
 		assert(quotes != null);
 		assert(paymentData != null);
@@ -132,7 +133,8 @@ public class Server {
 		return this.serverData.addBooking(booking);
 	}
 	
-	public void returnBike(Provider provider, int bookingNumber) 
+	public void returnBike(Provider provider, int bookingNumber)
+		// TODO: check if provider and bookingNumber is actually in system.
 			throws ProviderIsNotAPartnerException {
 		Booking booking = this.serverData.getBooking(bookingNumber);
 		if (booking.getProvider().equals(provider)) { 
