@@ -50,9 +50,15 @@ public class Server {
 		DateRange dateRange = quotes[0].getDateRange();
 		for (Quote q : quotes){
 			if (!q.getProvider().equals(prov)){
+				assert(false);
 				return false;
 			}
 			if (!q.getDateRange().equals(dateRange)){
+				assert(false);
+				return false;
+			}
+			if (!q.getProvider().getBikes().contains(q.getBike())){
+				assert(false);
 				return false;
 			}
 		}
@@ -78,14 +84,14 @@ public class Server {
 			Location location) 
 					throws BikesUnavailableException, PaymentRefusedException {
 		// Assuming that the bookQuote is called from inside the system
-		// If it were otherwise those asserts should be exceptions
-		// TODO: what if the quotes have illegal parameters? (provider not in system, bike not own by provider etc.)
+		// If it were otherwise those asserts should be changed exceptions
 		assert(customer != null);
 		assert(quotes != null);
 		assert(paymentData != null);
 		assert(quotes.length > 0); // cannot book 0 quotes
 
 		assert(checkQuotes(quotes));
+		assert(this.serverData.getProviders().contains(quotes[0].getProvider())); // check whether the provider is in the system, so there are no mistakes in the tests
 
 
 		if (location == null) {
@@ -134,9 +140,10 @@ public class Server {
 	}
 	
 	public void returnBike(Provider provider, int bookingNumber)
-		// TODO: check if provider and bookingNumber is actually in system.
 			throws ProviderIsNotAPartnerException {
+		assert(this.serverData.getProviders().contains(provider)); // check whether the provider is in the system, so there are no mistakes in the tests
 		Booking booking = this.serverData.getBooking(bookingNumber);
+		assert(booking != null);
 		if (booking.getProvider().equals(provider)) { 
 			// Delivered to the original provider
 			booking.resolveDeposit();
@@ -148,7 +155,7 @@ public class Server {
 					booking, 
 					provider.getLocation(), 
 					booking.getProvider().getLocation(),
-					LocalDate.now());   // TODO: is it possible to change it such that it gets the return date?
+					booking.getDateRange().getEnd()); 
 			// The Booking will resolve itself when it is delivered
 		} else {
 			throw new ProviderIsNotAPartnerException();

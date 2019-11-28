@@ -17,7 +17,6 @@ class TestLocation {
         location3 = new Location("NW1 6XE", "221B Baker Street");
     }
     
-    // TODO: put some tests here
     @Test
     void testAssertPostcode() {
         assertThrows(AssertionError.class, () -> {

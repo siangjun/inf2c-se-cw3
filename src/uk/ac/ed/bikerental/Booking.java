@@ -84,6 +84,12 @@ public class Booking implements Deliverable{
 	public Provider getProvider() {
 		return this.provider;
 	}
+	public DateRange getDateRange() {
+		if (this.quotes.size() == 0) {
+			return null;
+		}
+		return this.quotes.get(0).getDateRange();
+	}
 
 	@Override
 	public void onPickup() {
