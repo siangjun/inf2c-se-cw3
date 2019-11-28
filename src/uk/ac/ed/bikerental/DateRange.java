@@ -20,9 +20,7 @@ public class DateRange {
         // see unit test
         this.start = start;
         this.end = end;
-        if (end.isBefore(start)) {
-        	throw new IllegalArgumentException();
-        }
+		assert(!end.isBefore(start));
     }
     
     /**
@@ -64,10 +62,8 @@ public class DateRange {
      *
      * @param other an object {@link DateRange}
      * @return      <code>true</code> if overlap found, <code>false</code> otherwise.
-     * @throws IllegalArgumentException If other is null
      */
     public Boolean overlaps(DateRange other) {
-    	if (other == null) throw new IllegalArgumentException();
 		if (start.isBefore(other.getEnd()) &&
 				other.getStart().isBefore(end)){
 			// overlaps

@@ -47,17 +47,17 @@ class TestDateRange {
 	@Test
 	void testInvalidData() {
         //checks for day difference
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(AssertionError.class, () -> {
             DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
                     LocalDate.of(2019,12,4));
         });
         //checks for month difference
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(AssertionError.class, () -> {
             DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
                     LocalDate.of(2019,11,5));
         });
         //checks for year difference
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(AssertionError.class, () -> {
             DateRange invalid = new DateRange(LocalDate.of(2019,12,5),
                     LocalDate.of(2018,11,5));
         });

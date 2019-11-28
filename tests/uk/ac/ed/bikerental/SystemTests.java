@@ -222,6 +222,7 @@ class SystemTests {
 
     @Test
     void testBookQuoteBikeUnavailable() {
+    	// TODO: The customer tries to book a bike from wrong provider
         assertThrows(Server.BikesUnavailableException.class, () -> {
             testServer.bookQuote(c1, lockedQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
@@ -254,8 +255,7 @@ class SystemTests {
     @Test
     void testBookQuoteInvalidQuoteInvalidProvider() {
         invalidQuotes[0] = invalidQuote1;
-	    assertThrows(NullPointerException.class, () -> {
-	        //TODO: or maybe InvalidQuoteException?, need to check if provider is actually in system.
+	    assertThrows(AssertionError.class, () -> {
 	        testServer.bookQuote(c1, invalidQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
         });
@@ -264,8 +264,7 @@ class SystemTests {
     @Test
     void testBookQuoteInvalidQuoteBikeNotOwnedByProvider() {
         invalidQuotes[0] = invalidQuote2;
-        assertThrows(NullPointerException.class, () -> {
-            //TODO: or maybe InvalidQuoteException?, need to check if provider actually owns bike.
+        assertThrows(AssertionError.class, () -> {
             testServer.bookQuote(c1, invalidQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
         });
@@ -298,22 +297,16 @@ class SystemTests {
 
     @Test
     void testReturnBikeBookingNotInSystem() {
-	    assert(false);
-	    /* TODO: remove comments once implemented in system.
-	    assertThrows(Server.BookingNotInSystem.class, () -> {
+	    assertThrows(AssertionError.class, () -> {
 	        testServer.returnBike(p1, 93846);
 	    });
-	     */
     }
 
     @Test
     void testReturnBikeProviderNotInSystem() {
-        assert(false);
-	    /* TODO: remove comments once implemented in system.
-	    assertThrows(Server.ProviderNotInSystem.class, () -> {
+	    assertThrows(AssertionError.class, () -> {
 	        testServer.returnBike(pNotInSystem, ticket);
 	    });
-	     */
     }
 
     @Test
@@ -403,8 +396,6 @@ class SystemTests {
         // delivery of bike from partner back to the original provider
         // add to the hashset because we want to check if the delivery service knows to send it.
         delBookings.add(testBooking3);
-        // TODO: currently when we return bike to partner, it sets the date of delivery to now,
-        //  instead of the return date.
         assertEquals(delBookings, deliveryService.getPickupsOn(LocalDate.of(2019,11,4)));
         deliveryService.carryOutPickups(LocalDate.of(2019,11,4));
         assertEquals(DeliveryState.BeingTransported, testBooking3.getDeliveryState());
