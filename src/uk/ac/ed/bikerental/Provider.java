@@ -28,7 +28,8 @@ public class Provider {
 	public void addPartner(Provider provider) {
 		this.partners.add(provider);
 	}
-	
+
+	// TODO: what happens if the partner is not in the set to begin with?
 	public void removePartner(Provider provider) {
 		this.partners.remove(provider);
 	}
