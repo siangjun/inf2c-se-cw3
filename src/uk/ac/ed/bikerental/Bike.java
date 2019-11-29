@@ -16,6 +16,13 @@ public class Bike {
 	private ValuationPolicy valuationPolicy;
 
     /**
+     * Creates an instance of {@link Bike} class. Sets the date acquired to now and valuation policy to default.
+     * @param type of class {@link BikeType}.
+     */
+	public Bike(BikeType type){
+		this(type, new MockValuationPolicy());
+	}
+    /**
      * Creates an instance of {@link Bike} class. Sets the date acquired to now.
      * @param type of class {@link BikeType}.
      * @param valuationPolicy {@link ValuationPolicy}.
@@ -27,6 +34,14 @@ public class Bike {
         this.valuationPolicy = valuationPolicy;
     }
 
+    /**
+     * Creates an instance of {@link Bike} class, with chance to set dateAcquired and with default valuation policy.
+     * @param type of class {@link BikeType}.
+     * @param dateAcquired of class {@link LocalDate}.
+     */
+    public Bike(BikeType type, LocalDate dateAcquired) {
+		this(type, new MockValuationPolicy(), dateAcquired);
+    }
     /**
      * Creates an instance of {@link Bike} class, with chance to set dateAcquired.
      * @param type of class {@link BikeType}.
