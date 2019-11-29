@@ -29,9 +29,8 @@ public class Provider {
 		this.partners.add(provider);
 	}
 
-	// TODO: what happens if the partner is not in the set to begin with?
 	public void removePartner(Provider provider) {
-		this.partners.remove(provider);
+		this.partners.remove(provider); // Nothing will happen if there is no provider in providers
 	}
 	
 	public BigDecimal getPriceForBike(Bike bike, DateRange duration) {

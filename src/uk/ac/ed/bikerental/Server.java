@@ -1,7 +1,6 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -114,7 +113,7 @@ public class Server {
 		}
 		DateRange dateRange = quotes[0].getDateRange();
 		Provider provider = quotes[0].getProvider();
-		Booking booking = new Booking(customer, provider);
+		Booking booking = new Booking(provider);
 
 		boolean succ = true;
 		BigDecimal price = new BigDecimal(0);

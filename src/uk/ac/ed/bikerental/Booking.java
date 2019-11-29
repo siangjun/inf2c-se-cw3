@@ -23,7 +23,6 @@ enum BookingState{
 }
 
 public class Booking implements Deliverable{
-	private final Customer customer;
 	private ArrayList<Quote> quotes;
 	private Provider provider;
 	private DeliveryState deliveryState;
@@ -32,8 +31,7 @@ public class Booking implements Deliverable{
 	private PaymentData paymentData;
 
 	
-	public Booking(Customer customer, Provider provider) {
-		this.customer = customer;
+	public Booking(Provider provider) {
 		this.provider = provider;
 		this.quotes = new ArrayList<Quote>();
 		this.deliveryState = DeliveryState.None;
@@ -78,9 +76,6 @@ public class Booking implements Deliverable{
 		this.deliveryState = state;
 	}
 
-	public Customer getCustomer() {
-		return this.customer;
-	}
 	public Provider getProvider() {
 		return this.provider;
 	}
