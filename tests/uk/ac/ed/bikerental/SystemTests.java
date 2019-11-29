@@ -99,25 +99,25 @@ class SystemTests {
                 LocalDate.of(2019,11,4)), p1.getPriceForBike(b1,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b1.getValue());
+                b1.getValue(LocalDate.of(2019, 11, 1)));
 
         q2 = new Quote(b2, p2, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), p2.getPriceForBike(b2,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b2.getValue());
+                b2.getValue(LocalDate.of(2019, 11, 1)));
 
         invalidQuote1 = new Quote(b1, pNotInSystem, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), pNotInSystem.getPriceForBike(b1,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b1.getValue());
+                b1.getValue(LocalDate.of(2019, 11, 1)));
 
         invalidQuote2 = new Quote(bNotOwnedByProvider, p1, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), p1.getPriceForBike(bNotOwnedByProvider,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b1.getValue());
+                b1.getValue(LocalDate.of(2019, 11, 1)));
 
         testServer = new Server(new MockServerData(testProviders));
 

@@ -32,21 +32,21 @@ class ValuationPolicyTests {
     
     @Test
     void testLinearDepreciationValuation() {
-        assertEquals(BigDecimal.valueOf(300.00).stripTrailingZeros(), b1.getValue().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(300.00).stripTrailingZeros(), b1.getValue(LocalDate.now()).stripTrailingZeros());
     }
 
     @Test
     void testLinearDepreciationValuationDoubleConv() {  
-        assertEquals(BigDecimal.valueOf(300.00).stripTrailingZeros(), b2.getValue().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(300.00).stripTrailingZeros(), b2.getValue(LocalDate.now()).stripTrailingZeros());
     }
 
     @Test
     void testDoubleDecliningBalanceDepreciationValuation() { 
-        assertEquals(BigDecimal.valueOf(204.80).stripTrailingZeros(), b3.getValue().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(204.80).stripTrailingZeros(), b3.getValue(LocalDate.now()).stripTrailingZeros());
     }
 
     @Test
     void testDoubleDecliningBalanceDepreciationValuationDoubleConv() {
-        assertEquals(BigDecimal.valueOf(204.80).stripTrailingZeros(), b4.getValue().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(204.80).stripTrailingZeros(), b4.getValue(LocalDate.now()).stripTrailingZeros());
     }
 }
