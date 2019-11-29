@@ -41,6 +41,7 @@ public class Server {
 							getPriceForBike(bike, query.getDateRange()); 
 						BigDecimal deposit = bike.
 							getValue(query.getDateRange().getStart());
+						deposit = deposit.multiply(provider.getDepositRate());
 
 						availableQuotes.add(
 								new Quote(bike, provider, query.getDateRange(),
