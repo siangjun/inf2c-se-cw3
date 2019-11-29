@@ -152,7 +152,7 @@ class SystemTests {
         lockedQuotes[0] = q2;
         invalidQuotes = new Quote[1];
 
-        book1 = new Booking(c1,p1);
+        book1 = new Booking(p1);
         book1.addQuote(q1);
         ticket = testServer.getServerData().addBooking(book1);
 
