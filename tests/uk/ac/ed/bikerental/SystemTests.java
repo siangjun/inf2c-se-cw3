@@ -51,6 +51,7 @@ class SystemTests {
 	}
 			
 
+	//Over here contains all the values we expect the functions to return for comparison.
     @BeforeEach
     void setUp() throws Exception {
         // Setup mock delivery service before each tests
