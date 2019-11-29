@@ -100,7 +100,7 @@ class SystemTests {
                 LocalDate.of(2019,11,4)), p1.getPriceForBike(b1,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b1.getValue(LocalDate.of(2019, 11, 1)));
+                b1.getValue(LocalDate.of(2019, 11, 1)).multiply(BigDecimal.valueOf(0.5)));
 
         q2 = new Quote(b2, p2, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), p2.getPriceForBike(b2,
