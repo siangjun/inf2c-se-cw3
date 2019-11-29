@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * The Server class is the class that processes the queries and bookings that are passed to the system.
+ */
 public class Server {
 	private ServerDataInterface serverData;
 	
@@ -21,6 +24,12 @@ public class Server {
 		return bike.getType().getSubType().equals(query.getRequestedType().getSubType());
 	}
 
+	/**
+	 * Searches the server data for providers which are near the query location,
+	 * then searches each provider for bikes that match the criteria in the query.
+	 * @param query Query that is passed by the system to the server.
+	 * @return an {@link ArrayList} of {@link Quote} that matches the query.
+	 */
 	public ArrayList<Quote> getQuotes(Query query) {
 		ArrayList<Quote> availableQuotes = new ArrayList<Quote>();
 		
@@ -45,6 +54,11 @@ public class Server {
 		return availableQuotes;
 	}
 
+	/**
+	 * Checks whether the quotes are valid.
+	 * @param quotes Quotes that are passed to the server by the system
+	 * @return <code>true</code> if the quotes are valid, <code>false</code> otherwise.
+	 */
 	private static boolean checkQuotes(Quote[] quotes){
 		Provider prov = quotes[0].getProvider();
 		DateRange dateRange = quotes[0].getDateRange();
@@ -138,7 +152,15 @@ public class Server {
 
 		return this.serverData.addBooking(booking);
 	}
-	
+
+	/**
+	 * Function to be called when the bike is returned to the {@link Provider} or it's partner.
+	 * Arranges appropriate delivery actions if returned to partner.
+	 * @param provider The {@link Provider} that's being returned to.
+	 * @param bookingNumber The unique number associated with the booking.
+	 * @throws ProviderIsNotAPartnerException When the {@link Provider} given is not a partner nor
+	 *         the original owner.
+	 */
 	public void returnBike(Provider provider, int bookingNumber)
 			throws ProviderIsNotAPartnerException {
 		assert(this.serverData.getProviders().contains(provider)); // check whether the provider is in the system, so there are no mistakes in the tests
@@ -163,6 +185,9 @@ public class Server {
 
 	}
 
+	/**
+	 * @return the server data.
+	 */
 	ServerDataInterface getServerData() {
 		return this.serverData;
 	}

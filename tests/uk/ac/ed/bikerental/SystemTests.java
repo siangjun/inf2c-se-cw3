@@ -319,7 +319,7 @@ class SystemTests {
         Location deliveryAdd2 = new Location("EH3 9QG", "123 Fountainbridge");
         Customer testCustomer1 = new Customer(deliveryAdd1);
         Customer testCustomer2 = new Customer(deliveryAdd2);
-        Customer testCustomer3 = new Customer(deliveryAdd1); // why did I want to do this again?
+        Customer testCustomer3 = new Customer(deliveryAdd1);
 
         // each customer queries what they want.
         ArrayList<Quote> quotes1 = testServer.getQuotes(testQuery1);      // customer1's query

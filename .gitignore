@@ -36,3 +36,5 @@ lib/junit-platform-commons-1.4.2.jar
 lib/junit-platform-engine-1.4.2.jar
 lib/opentest4j-1.1.1.jar
 .idea/compiler.xml
+submission.zip
+output.log

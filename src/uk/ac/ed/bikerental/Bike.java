@@ -49,7 +49,7 @@ public class Bike {
 	}
     /**
      * Checks whether bike is available for a give DateRange in a query
-     * @param dateRange
+     * @param dateRange The range that is given.
      * @return <code>boolean</code> whether is taken
      */
 	public boolean isTaken(DateRange dateRange) {
