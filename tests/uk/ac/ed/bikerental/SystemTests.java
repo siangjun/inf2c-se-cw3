@@ -22,7 +22,8 @@ class SystemTests {
     private Query testQuery4;
     private Query testQuery5;
     private ArrayList<Provider> testProviders;
-    private ArrayList<Quote> testQuotes;
+    private ArrayList<Quote> testQuotes1;
+    private ArrayList<Quote> testQuotes2;
     private Customer c1;
     private Provider p1;
     private Provider p2;
@@ -32,14 +33,18 @@ class SystemTests {
     private Bike b2;
     private Bike b3;
     private Bike b4;
+    private Bike b5;
     private Bike bNotOwnedByProvider;
     private Quote q1;
     private Quote q2;
+    private Quote q3;
+    private Quote q4;
     private Quote invalidQuote1;
     private Quote invalidQuote2;
     private Quote quotes[];
     private Quote lockedQuotes[];
     private Quote invalidQuotes[];
+    private Quote multiQuotes[];
     private Booking book1;
     private int ticket;
 				
@@ -87,12 +92,16 @@ class SystemTests {
         b4 = new Bike(new BikeType((500), BikeType.SubType.Street),
                 new MockValuationPolicy(),
                 LocalDate.of(2018,1,1));
+        b5 = new Bike(new BikeType((250), BikeType.SubType.Street),
+                new MockValuationPolicy(),
+                LocalDate.of(2018,1,1));
         bNotOwnedByProvider = new Bike(new BikeType((500), BikeType.SubType.Mountain),
                             new MockValuationPolicy(),
                             LocalDate.of(2015,1,1));
 
         p1.addBike(b1);
         p1.addBike(b4);
+        p1.addBike(b5);
         p2.addBike(b2);
         p3.addBike(b3);
 
@@ -106,7 +115,17 @@ class SystemTests {
                 LocalDate.of(2019,11,4)), p2.getPriceForBike(b2,
                 new DateRange(LocalDate.of(2019, 11, 1),
                         LocalDate.of(2019,11,4))),
-                b2.getValue(LocalDate.of(2019, 11, 1)));
+                b2.getValue(LocalDate.of(2019, 11, 1)).multiply(BigDecimal.valueOf(0.5)));
+        q3 = new Quote(b4, p1, new DateRange(LocalDate.of(2019, 11, 3),
+                LocalDate.of(2019,11,4)), p1.getPriceForBike(b4,
+                new DateRange(LocalDate.of(2019, 11, 3),
+                        LocalDate.of(2019,11,4))),
+                b4.getValue(LocalDate.of(2019, 11, 3)).multiply(BigDecimal.valueOf(0.5)));
+        q4 = new Quote(b5, p1, new DateRange(LocalDate.of(2019, 11, 3),
+                LocalDate.of(2019,11,4)), p1.getPriceForBike(b5,
+                new DateRange(LocalDate.of(2019, 11, 3),
+                        LocalDate.of(2019,11,4))),
+                b5.getValue(LocalDate.of(2019, 11, 3)).multiply(BigDecimal.valueOf(0.5)));
 
         invalidQuote1 = new Quote(b1, pNotInSystem, new DateRange(LocalDate.of(2019, 11, 1),
                 LocalDate.of(2019,11,4)), pNotInSystem.getPriceForBike(b1,
@@ -125,34 +144,39 @@ class SystemTests {
         // Don't care how query fetching to the server works so we make a test one
         testQuery1 = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
-                new BikeType((0.0), BikeType.SubType.Mountain));
+                new BikeType((100.0), BikeType.SubType.Mountain));
 
         testQuery2 = new Query(new Location("SW1A 1AA", ""), new DateRange(
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
-                new BikeType((0.0), BikeType.SubType.Mountain));
+                new BikeType((100.0), BikeType.SubType.Mountain));
 
         testQuery3 = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019,11,1), LocalDate.of(2019,11,4)),
-                new BikeType((0.0), BikeType.SubType.BMX));
+                new BikeType((100.0), BikeType.SubType.BMX));
 
         testQuery4 = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019, 11, 1), LocalDate.of(2019, 11, 4)),
-                new BikeType((0.0), BikeType.SubType.Hybrid));
+                new BikeType((100.0), BikeType.SubType.Hybrid));
 
         testQuery5 = new Query(new Location("EH8 9LE", ""), new DateRange(
                 LocalDate.of(2019, 11, 3), LocalDate.of(2019, 11, 4)),
-                new BikeType((0.0), BikeType.SubType.Street));
+                new BikeType((100.0), BikeType.SubType.Street));
 
         b2.lock(q2);
 
-        testQuotes = new ArrayList<>();
-        testQuotes.add(q1);
+        testQuotes1 = new ArrayList<>();
+        testQuotes1.add(q1);
+        testQuotes2 = new ArrayList<>();
+        testQuotes2.add(q3);
+        testQuotes2.add(q4);
         quotes = new Quote[1];
         quotes[0] = q1;
         lockedQuotes = new Quote[1];
         lockedQuotes[0] = q2;
         invalidQuotes = new Quote[1];
-
+        multiQuotes = new Quote[2];
+        multiQuotes[0] = q3;
+        multiQuotes[1] = q4;
         book1 = new Booking(p1);
         book1.addQuote(q1);
         ticket = testServer.getServerData().addBooking(book1);
@@ -163,7 +187,7 @@ class SystemTests {
 
     @Test
     void testGetQuote() {
-        assertEquals(testQuotes, testServer.getQuotes(testQuery1));
+        assertEquals(testQuotes1, testServer.getQuotes(testQuery1));
     }
 
     @Test
@@ -174,6 +198,11 @@ class SystemTests {
     @Test
     void testGetQuoteBikeUnavailable() {
         assertEquals(new ArrayList<Quote>(), testServer.getQuotes(testQuery3));
+    }
+
+    @Test
+    void testGetQuoteMultipleMatches() {
+	    assertEquals(testQuotes2, testServer.getQuotes(testQuery5));
     }
 
     @Test
@@ -269,6 +298,15 @@ class SystemTests {
             testServer.bookQuote(c1, invalidQuotes, new MockPaymentService.MockPaymentData("test"),
                     false, null);
         });
+    }
+
+    @Test
+    void testBookQuoteMultipleQuotes() throws Exception {
+        int t = testServer.bookQuote(c1, multiQuotes,
+                new MockPaymentService.MockPaymentData("test"), false, null);
+        Booking booking = testServer.getServerData().getBooking(t);
+        assertEquals(DeliveryState.None, booking.getDeliveryState());
+        assertEquals(BookingState.AwaitingCustomer, booking.getState());
     }
 
     @Test
