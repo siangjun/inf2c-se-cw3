@@ -44,8 +44,14 @@ public class Bike {
     }
 
 
-	public BigDecimal getValue() {
-		return this.valuationPolicy.calculateValue(this, LocalDate.now());
+	/**
+	 * Calcualtes the value of the bike at a given time
+	 * Used as calculation for the deposit
+	 * @param atTime time at which the deposit should be calculated
+	 * @return BigDecimal that represents the value of a bike at give time
+	 */
+	public BigDecimal getValue(LocalDate atTime) {
+		return this.valuationPolicy.calculateValue(this, atTime);
 	}
     /**
      * Checks whether bike is available for a give DateRange in a query

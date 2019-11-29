@@ -4,20 +4,12 @@ The bike can have multiple booking at the same time for different DateRanges, th
 	The only thing that is holding bookings is server
 	And the booking is holding customer and a set of quotes that were booked with this booking
 
-		
-Testing:
-	Shouldn't we write the unit test firsts before doing the actual code so we know what we're suppose to be aiming for?	
-	The constructor for the DateRange now throws when end is before start
-
-	A lot of classes are data structures with all final methods, which means that they are very easy to test for system testing
-
 TODOs for the previous courseworks
 
 I don't know if you need function parameters in the design, but I'll be noting what I have added and deviated
 
 cw1 & cw2 static
 The server now has no data about bookings (all the relevant data is in the bikes)
-Booking does not extends Quote, it hold reference to one
 
 cw2 static model
 

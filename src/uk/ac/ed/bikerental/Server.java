@@ -36,16 +36,17 @@ public class Server {
 		serverData.getProviders().forEach((provider) -> {
 			if (provider.getLocation().isNearTo(query.getLocation())){
 				provider.getBikes().forEach((bike) -> {
-					if (!bike.isTaken(query.getDateRange())){
-						if (matchesQuery(query, bike)) {
-							BigDecimal bikePrice = provider.getPriceForBike(bike, query.getDateRange()); 
-							BigDecimal deposit = bike.getValue();
+					if (!bike.isTaken(query.getDateRange()) &&
+							matchesQuery(query, bike)) {
+						BigDecimal bikePrice = provider.
+							getPriceForBike(bike, query.getDateRange()); 
+						BigDecimal deposit = bike.
+							getValue(query.getDateRange().getStart());
 
-							availableQuotes.add(
-									new Quote(bike, provider, query.getDateRange(),
-											bikePrice, 
-											deposit));
-						}
+						availableQuotes.add(
+								new Quote(bike, provider, query.getDateRange(),
+										bikePrice, 
+										deposit));
 					}
 				});
 			}
@@ -117,7 +118,7 @@ public class Server {
 
 		boolean succ = true;
 		BigDecimal price = new BigDecimal(0);
-		BigDecimal depositRate = provider.getDepositRate();
+		BigDecimal deposit = new BigDecimal(0);
 		for (Quote q: quotes) {
 			boolean s = q.getBike().lock(q);
 			if (!s) {
@@ -126,6 +127,7 @@ public class Server {
 			} else {
 				booking.addQuote(q);
 				price = price.add(q.getPrice());
+				deposit = deposit.add(q.getDeposit());
 			}
 		}
 
@@ -134,12 +136,12 @@ public class Server {
 			throw new BikesUnavailableException(); // throws for things we have no control over
 		}
 		if (!PaymentServiceFactory.getPaymentService().
-				confirmPayment(paymentData, price.add(price.multiply(depositRate)))) {
+				confirmPayment(paymentData, price.add(deposit))) {
 			booking.freeBikes();
 			throw new PaymentRefusedException();
 		}
 		
-		booking.setFinalised(price.multiply(depositRate), paymentData);
+		booking.setFinalised(deposit, paymentData);
 		
 		if (wantsDelivery) {
 			DeliveryServiceFactory.getDeliveryService().scheduleDelivery(
